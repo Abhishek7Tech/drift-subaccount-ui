@@ -2,6 +2,7 @@ import { create } from "zustand";
 
 interface WalletStoreState {
     isConnected: boolean,
+    
 }
 
 interface WalletStoreAction {

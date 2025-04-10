@@ -2,15 +2,19 @@
 import Link from "next/link";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import useWalletStore from "@/app/store/walletStore";
+import initalizeClient from "@/app/utils/initialize";
 
 const Navbar = () => {
   const wallet = useWallet();
+
   const setConnection = useWalletStore((store) => store.setIsConnected);
 
   useEffect(() => {
-    console.log("WALLET", wallet.connected);
+    if (!wallet) {
+      return;
+    }
     setConnection(wallet.connected);
   }, [wallet]);
   return (
