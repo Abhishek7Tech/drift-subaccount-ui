@@ -30,8 +30,10 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <WalletContextProvider>
-          <ClientProvider>{children}</ClientProvider>
-        </WalletContextProvider>
+          <ClientProvider>
+          {children}
+          </ClientProvider>
+          </WalletContextProvider>
       </body>
     </html>
   );

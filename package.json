@@ -10,7 +10,10 @@
   },
   "dependencies": {
     "@coral-xyz/anchor": "^0.31.0",
-    "@drift-labs/sdk": "^2.38.0",
+    "@drift-labs/sdk": "^2.118.0-beta.3",
+    "@hookform/resolvers": "^5.0.1",
+    "@radix-ui/react-label": "^2.1.3",
+    "@radix-ui/react-slot": "^1.2.0",
     "@solana/wallet-adapter-base": "^0.9.24",
     "@solana/wallet-adapter-react": "^0.15.36",
     "@solana/wallet-adapter-react-ui": "^0.9.36",
@@ -22,10 +25,12 @@
     "next": "15.2.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-hook-form": "^7.55.0",
+    "rpc-websockets": "7.10.0",
     "tailwind-merge": "^3.2.0",
     "tw-animate-css": "^1.2.5",
-    "zustand": "^5.0.3",
-    "rpc-websockets": "7.10.0"
+    "zod": "^3.24.2",
+    "zustand": "^5.0.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

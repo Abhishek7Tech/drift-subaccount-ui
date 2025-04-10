@@ -4,7 +4,7 @@ import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useEffect, useMemo, useState } from "react";
 import useWalletStore from "@/app/store/walletStore";
-import initalizeClient from "@/app/utils/initialize";
+
 
 const Navbar = () => {
   const wallet = useWallet();
