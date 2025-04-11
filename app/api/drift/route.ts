@@ -14,14 +14,13 @@ const NETWORK =
   process.env.NEXT_PUBLIC_NETWORK_URL || "https://api.devnet.solana.com";
 
 export async function GET() {
- 
   try {
-
     const driftClient: DriftClient | undefined = await createClient();
 
     if (!driftClient) {
       throw new Error("Failed to create client");
     }
+    await driftClient.subscribe();
     const subscription = driftClient.accountSubscriber.isSubscribed;
 
     return NextResponse.json({

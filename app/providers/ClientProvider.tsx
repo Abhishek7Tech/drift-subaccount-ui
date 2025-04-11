@@ -23,10 +23,10 @@ const ClientProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const initializeClient = async () => {
       try {
-        const req = await fetch("/api/drift");
+        const req = await fetch("/api/user");
         const res = await req.json();
         console.log("RES", res);
-        setIsSubscribed(res.subscription);
+        setIsSubscribed(res.userAccount);
       } catch (error) {
         setError("Something went wrong");
       }
