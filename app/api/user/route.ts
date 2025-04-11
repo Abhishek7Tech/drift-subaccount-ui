@@ -11,10 +11,17 @@ export async function GET() {
 
     await driftClient.subscribe();
     const client = driftClient?.getUserAccount();
+    const subAccountIds = await driftClient.getNextSubAccountId();
+    let subAccounts = [];
+    for (let i = 0; i < subAccountIds; i++) {
+      console.log("Ids", i);
+      subAccounts.push(i);
+    }
     if (client) {
       return NextResponse.json({
         message: "Client exsist",
         userAccount: true,
+        subAccountIds: { ids: subAccounts },
       });
     }
   } catch (error) {

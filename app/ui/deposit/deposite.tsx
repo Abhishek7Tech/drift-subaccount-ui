@@ -11,8 +11,12 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { useStore } from "zustand";
+import useClientStore from "@/app/store/clientStore";
+import { ClientContext } from "@/app/providers/ClientProvider";
 const formSchema = z.object({
   amount: z.coerce
     .number()
@@ -22,21 +26,28 @@ const formSchema = z.object({
     .max(10, {
       message: "Maximim limit is 10 SOL",
     }),
+  accountId: z.coerce.number().min(0, { message: "Invalid Account Id" }),
 });
 
 const DepositeForm = () => {
   const [message, setMessage] = useState<undefined | string>(undefined);
   const [tx, setTx] = useState<undefined | string>(undefined);
+  const clientContext = useContext(ClientContext);
+  if (!clientContext) {
+    return;
+  }
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       amount: 0,
+      accountId: 0,
     },
   });
-
+  console.log(clientContext?.subIds);
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const amount = Number(values.amount);
-    console.log("Amount", amount);
+    const accountId = Number(values.accountId);
+    console.log("Amount", amount, accountId);
 
     try {
       const req = await fetch("/api/deposite", {
@@ -44,7 +55,7 @@ const DepositeForm = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(amount),
+        body: JSON.stringify({ amount, accountId }),
       });
 
       const res = await req.json();
@@ -72,22 +83,48 @@ const DepositeForm = () => {
             control={form.control}
             name="amount"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Deposite</FormLabel>
+              <>
+                <FormItem>
+                  <FormLabel>Deposite</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      min={1}
+                      max={10}
+                      step={0.1}
+                      placeholder="0.35"
+                      {...field}
+                    />
+                  </FormControl>
+                </FormItem>
+              </>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="accountId"
+            render={({ field }) => (
+              <FormItem itemType="number" className="w-full">
+                <FormLabel>Sub Accounts</FormLabel>
                 <FormControl>
                   <Input
                     type="number"
-                    min={1}
-                    max={10}
-                    step={0.5}
+                    min={0}
+                    max={
+                      clientContext.subIds
+                        ? clientContext.subIds?.length - 1
+                        : 0
+                    }
+                    step={1}
                     placeholder="0.35"
                     {...field}
                   />
                 </FormControl>
                 {message && (
-                  <span className="text-green-400 font-medium">{message}</span>
-                )}
-
+                    <span className="text-green-400 font-medium">
+                      {message}
+                    </span>
+                  )}
                 <FormMessage />
               </FormItem>
             )}

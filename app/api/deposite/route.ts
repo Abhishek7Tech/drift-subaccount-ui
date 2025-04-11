@@ -3,12 +3,12 @@ import { loadKeypair, Wallet } from "@drift-labs/sdk";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
-  const amount = await req.json();
+  const body: { amount: number; accountId: number } = await req.json();
   if (!process.env.NEXT_PUBLIC_KEY_PAIR) {
     throw new Error("Key pair not found.");
   }
 
-    const wallet = new Wallet(loadKeypair(process.env.NEXT_PUBLIC_KEY_PAIR));
+  const wallet = new Wallet(loadKeypair(process.env.NEXT_PUBLIC_KEY_PAIR));
 
   try {
     const driftClient = await createClient();
@@ -20,28 +20,28 @@ export async function POST(req: Request) {
     await driftClient.subscribe();
 
     const marketIndex = 1; //SOL
-    const amountInBN = driftClient.convertToSpotPrecision(marketIndex, amount);
+    const amountInBN = driftClient.convertToSpotPrecision(
+      marketIndex,
+      body.amount
+    );
 
     const user = await driftClient.getUser();
-    
-    //  const associatedTokenAccount = await driftClient.getAssociatedTokenAccount(marketIndex);
-  
 
-    // console.log(
-    //   "ASSOCIATE ACCOUNT",
-    //   associatedTokenAccount.toString(),
-    //   "PUB",
-    //   user.userAccountPublicKey.toString()
-    // );
+    const associatedTokenAccount = await driftClient.getAssociatedTokenAccount(
+      marketIndex
+    );
+
     const tx = await driftClient.deposit(
       amountInBN,
       marketIndex,
-      wallet.publicKey,
-    )
+      associatedTokenAccount,
+      body.accountId
+    );
+    console.log("ACC", tx);
 
     return NextResponse.json({
       message: "Deposite Successful",
-        tx: tx,
+      tx: tx,
     });
   } catch (error) {
     console.log("ERROR deposite", error);

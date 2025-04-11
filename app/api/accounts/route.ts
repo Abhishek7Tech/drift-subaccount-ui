@@ -19,16 +19,8 @@ export async function GET() {
     const subAccounts = await driftClient.getUserAccountsForAuthority(
       wallet.publicKey
     );
-
-    
-    const dep = subAccounts[0].totalDeposits;
-    // const name = subAccounts[0].name.toString();
-        //   const name = subAccounts[0].account.name.toString();
-          console.log(
-          "BAL",user.getUserAccountPublicKey().toString()
-          );
-        //   console.log("Name", name);
-
+    const accounts = await driftClient.getUserAccountPublicKey(1);
+    console.log("Sub account", accounts.toString());
     return NextResponse.json({
       message: "User Accounts",
       subAccounts,
