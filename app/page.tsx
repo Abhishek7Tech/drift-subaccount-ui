@@ -5,6 +5,7 @@ import useWalletStore from "./store/walletStore";
 import { useEffect, useState } from "react";
 import InitializeForm from "./ui/initializeUser/initialize";
 import DepositeForm from "./ui/deposit/deposite";
+import AccountTable from "./ui/accountsTable/accounts";
 export default function Home() {
   const [isClient, setIsClient] = useState(false);
 
@@ -19,7 +20,8 @@ export default function Home() {
         {isWalletConnected ? "Connected" : "Disconnected"}
       </h1>
       <InitializeForm />
-      <DepositeForm/>
+      <DepositeForm />
+      <AccountTable />
     </div>
   );
 }

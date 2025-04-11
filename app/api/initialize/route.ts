@@ -12,9 +12,11 @@ export async function POST(req: Request) {
     }
     await driftClient.subscribe();
     const [txSig, userPublicKey] = await driftClient.initializeUserAccount(
-      0,
+      1,
       name
     );
+
+   
     return NextResponse.json({
       message: "Initialized User.",
       signature: txSig,

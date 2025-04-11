@@ -23,6 +23,7 @@ export async function POST(req: Request) {
     const amountInBN = driftClient.convertToSpotPrecision(marketIndex, amount);
 
     const user = await driftClient.getUser();
+    
     //  const associatedTokenAccount = await driftClient.getAssociatedTokenAccount(marketIndex);
   
 
