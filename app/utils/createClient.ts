@@ -1,10 +1,6 @@
 import { Connection } from "@solana/web3.js";
 
-import {
-  DriftClient,
-  loadKeypair,
-  Wallet,
-} from "@drift-labs/sdk";
+import { DriftClient, loadKeypair, Wallet } from "@drift-labs/sdk";
 const NETWORK =
   process.env.NEXT_PUBLIC_NETWORK_URL || "https://api.devnet.solana.com";
 
@@ -23,7 +19,7 @@ export async function createClient() {
       console.log("Wallet not found");
       return;
     }
-
+    console.log("ADDRESS",wallet.publicKey.toString());
     const driftClient = new DriftClient({
       connection,
       wallet,

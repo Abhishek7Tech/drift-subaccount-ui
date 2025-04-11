@@ -50,7 +50,9 @@ const InitializeFrom = () => {
         setMessage(`${res.message}`);
         setAddress(res.address.toString());
       }
-    } catch (error) {}
+    } catch (error) {
+      setMessage("Something went wrong.")
+    }
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values);
@@ -60,7 +62,7 @@ const InitializeFrom = () => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-8 w-fit mx-auto bg-gray-50 rounded-xl shadow-gray-500 p-4"
+        className="space-y-8 min-w-2xs mx-auto bg-gray-50 rounded-xl shadow-gray-500 p-4"
       >
         <FormField
           control={form.control}
@@ -69,7 +71,7 @@ const InitializeFrom = () => {
             <FormItem>
               <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input placeholder="drift" {...field} />
+                <Input type="text" placeholder="drift" {...field} />
               </FormControl>
               {message && <span className="text-green-400 font-medium">{message}</span>}
 

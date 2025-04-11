@@ -23,7 +23,7 @@ export async function POST(req: Request) {
   } catch (error) {
     console.log("Error", error);
     return NextResponse.json(
-      { error: "Failed to initialize user." },
+      { message: "Failed to initialize user." },
       { status: 500 }
     );
   }
