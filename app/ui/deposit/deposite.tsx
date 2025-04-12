@@ -77,7 +77,7 @@ const DepositeForm = () => {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-8 min-w-2xs mx-auto bg-gray-50 rounded-xl shadow-gray-500 p-4"
+          className="space-y-8 min-w-2xs mx-auto bg-gray-50 rounded-xl shadow-gray-500 border shadow-sm p-4"
         >
           <FormField
             control={form.control}
