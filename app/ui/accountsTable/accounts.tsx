@@ -10,12 +10,22 @@ import {
 } from "@/components/ui/table";
 import { ProgramAccount } from "@coral-xyz/anchor";
 import { UserAccount } from "@drift-labs/sdk";
-import { LAMPORTS_PER_SOL } from "@solana/web3.js";
+import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 import { useEffect, useState } from "react";
+interface SubAccounts {
+  subAccountId: number;
+  publicAddress: PublicKey;
+  baseAssetAmount: any;
+  balance: number;
+  isShort: boolean;
+  isLong: boolean;
+  openOrders: number;
+}
+[];
 const AccountTable = () => {
-  const [subAccounts, setSubAccounts] = useState<
-    undefined | UserAccount[]
-  >(undefined);
+  const [subAccounts, setSubAccounts] = useState<undefined | SubAccounts[]>(
+    undefined
+  );
   const [message, setMessage] = useState<string | undefined>(undefined);
   useEffect(() => {
     const fetchAccountsData = async () => {
@@ -23,10 +33,8 @@ const AccountTable = () => {
         const req = await fetch("/api/accounts");
         const res = await req.json();
         if (res?.subAccounts) {
-          console.log("RES", res);
-          const acc = res.subAccounts;
-          
           setSubAccounts(res.subAccounts);
+          console.log("RES", res.subAccounts);
         }
       } catch (error) {}
     };
@@ -41,10 +49,24 @@ const AccountTable = () => {
           <TableRow>
             <TableHead className="w-[100px]">Address</TableHead>
             <TableHead>Balance</TableHead>
-            <TableHead>Perp Positions</TableHead>
-            <TableHead className="text-right">Open Orders</TableHead>
+            <TableHead>Perp Position</TableHead>
+            <TableHead>Is Short</TableHead>
+            <TableHead>Is Long</TableHead>
+            <TableHead>Open Orders</TableHead>
           </TableRow>
         </TableHeader>
+        <TableBody>
+          {subAccounts?.map((acc) => (
+            <TableRow key={acc.subAccountId}>
+              <TableCell className="font-medium">{acc.publicAddress.toString()}</TableCell>
+              <TableCell className="text-center">{"$" + acc.balance}</TableCell>
+              <TableCell className="text-center">{acc.baseAssetAmount}</TableCell>
+              <TableCell className="text-center">{acc.isShort || "False"}</TableCell>
+              <TableCell className="text-center">{acc.isLong || "False"}</TableCell>
+              <TableCell className="text-center">{acc.openOrders}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
       </Table>
       {message && <span className="text-red-500 font-medium">{message}</span>}
     </>
