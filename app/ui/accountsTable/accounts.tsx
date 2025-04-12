@@ -72,10 +72,10 @@ const AccountTable = () => {
                 {acc.baseAssetAmount}
               </TableCell>
               <TableCell className="text-center">
-                {acc.isShort || "False"}
+                {acc.isShort ? "True" : "False"}
               </TableCell>
               <TableCell className="text-center">
-                {acc.isLong || "False"}
+                {acc.isLong ? "True" : "False"}
               </TableCell>
               <TableCell className="text-center">{acc.openOrders}</TableCell>
             </TableRow>

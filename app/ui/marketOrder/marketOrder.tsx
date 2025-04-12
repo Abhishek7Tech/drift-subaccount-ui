@@ -38,10 +38,10 @@ const formSchema = z.object({
   direction: z.string(),
   baseAssetAmount: z.coerce
     .number()
-    .min(0.1, { message: "Value should be > 0.1" }),
-  startPrice: z.coerce.number().min(0.1, { message: "Value should be > 0.1" }),
-  endPrice: z.coerce.number().min(0.1, { message: "Value should be > 0.1" }),
-  price: z.coerce.number().min(0.1, { message: "Value should be > 0.1" }),
+    .min(1, { message: "Value should be > 1" }),
+  startPrice: z.coerce.number().min(1, { message: "Value should be > 1" }),
+  endPrice: z.coerce.number().min(1, { message: "Value should be > 1" }),
+  price: z.coerce.number().min(1, { message: "Value should be > 1" }),
   duration: z.coerce
     .number()
     .min(30, { message: "Minimum duration should be 30 seconds" }),
@@ -58,10 +58,10 @@ const MarketOrder = () => {
     defaultValues: {
       direction: "long",
       accountId: 0,
-      baseAssetAmount: 0.1,
-      startPrice: 0.1,
-      endPrice: 0.1,
-      price: 0.1,
+      baseAssetAmount: 1,
+      startPrice: 1,
+      endPrice: 1,
+      price: 1,
       duration: 30,
     },
   });
@@ -177,8 +177,9 @@ const MarketOrder = () => {
                       <FormItem>
                         <Input
                           type="number"
-                          min={0.1}
                           id="baseAssetAmount"
+                          min={1}
+                          step={0.1}
                           placeholder="100"
                           {...field}
                         />
@@ -200,8 +201,9 @@ const MarketOrder = () => {
                         </FormLabel>
                         <Input
                           type="number"
-                          min={0.1}
                           id="startPrice"
+                          min={1}
+                          step={0.1}
                           placeholder="21.10"
                           {...field}
                         />
@@ -223,8 +225,9 @@ const MarketOrder = () => {
                         </FormLabel>
                         <Input
                           type="number"
-                          min={0.1}
+                          min={1}
                           id="endPrice"
+                          step={0.1}
                           placeholder="21.20"
                           {...field}
                         />
@@ -244,7 +247,8 @@ const MarketOrder = () => {
                         <FormLabel htmlFor="price">Price to Buy.</FormLabel>
                         <Input
                           type="number"
-                          min={0.1}
+                          min={1}
+                          step={0.1}
                           id="price"
                           placeholder="30.22"
                           {...field}

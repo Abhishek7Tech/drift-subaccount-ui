@@ -4,7 +4,7 @@ import { DriftClient, loadKeypair, Wallet } from "@drift-labs/sdk";
 const NETWORK =
   process.env.NEXT_PUBLIC_NETWORK_URL || "https://api.devnet.solana.com";
 
-export async function createClient(id=0) {
+export async function createClient() {
   try {
     const connection = new Connection(NETWORK, "confirmed");
     console.log(
@@ -23,8 +23,7 @@ export async function createClient(id=0) {
     const driftClient = new DriftClient({
       connection,
       wallet,
-      env: "devnet",
-      activeSubAccountId: id
+      env: "devnet"
     
     });
 
