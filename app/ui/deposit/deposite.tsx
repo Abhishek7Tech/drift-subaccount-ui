@@ -17,6 +17,13 @@ import { useContext, useState } from "react";
 import { useStore } from "zustand";
 import useClientStore from "@/app/store/clientStore";
 import { ClientContext } from "@/app/providers/ClientProvider";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 const formSchema = z.object({
   amount: z.coerce
     .number()
@@ -40,7 +47,7 @@ const DepositeForm = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       amount: 0,
-      accountId: 0,
+      accountId: 0
     },
   });
   console.log(clientContext?.subIds);
@@ -105,26 +112,29 @@ const DepositeForm = () => {
             name="accountId"
             render={({ field }) => (
               <FormItem itemType="number" className="w-full">
-                <FormLabel>Sub Accounts</FormLabel>
+                <FormLabel>Select Sub Account</FormLabel>
                 <FormControl>
-                  <Input
-                    type="number"
-                    min={0}
-                    max={
-                      clientContext.subIds
-                        ? clientContext.subIds?.length - 1
-                        : 0
-                    }
-                    step={1}
-                    placeholder="0.35"
+                  <Select
                     {...field}
-                  />
+                    onValueChange={field.onChange}
+                    value={field.value?.toString()}
+                  >
+                    <SelectTrigger className="w-full" id="accountId">
+                      <SelectValue placeholder="0" />
+                    </SelectTrigger>
+                    <SelectContent position="popper">
+                      {clientContext &&
+                        clientContext.subIds?.map((ids) => (
+                          <SelectItem key={ids} value={ids.toString()}>
+                            {ids.toString() || "0"}
+                          </SelectItem>
+                        ))}
+                    </SelectContent>
+                  </Select>
                 </FormControl>
                 {message && (
-                    <span className="text-green-400 font-medium">
-                      {message}
-                    </span>
-                  )}
+                  <span className="text-green-400 font-medium">{message}</span>
+                )}
                 <FormMessage />
               </FormItem>
             )}

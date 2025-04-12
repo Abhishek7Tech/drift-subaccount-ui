@@ -4,11 +4,6 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   const body: { amount: number; accountId: number } = await req.json();
-  if (!process.env.NEXT_PUBLIC_KEY_PAIR) {
-    throw new Error("Key pair not found.");
-  }
-
-  const wallet = new Wallet(loadKeypair(process.env.NEXT_PUBLIC_KEY_PAIR));
 
   try {
     const driftClient = await createClient();
