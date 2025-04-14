@@ -1,5 +1,4 @@
 import { createClient } from "@/app/utils/createClient";
-import { loadKeypair, Wallet } from "@drift-labs/sdk";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
@@ -7,11 +6,9 @@ export async function POST(req: Request) {
 
   try {
     const driftClient = await createClient();
-
     if (!driftClient) {
-      throw new Error("Failed to create client");
+      throw new Error("Failed to create client.");
     }
-
     await driftClient.subscribe();
 
     const marketIndex = 1; //SOL
@@ -19,29 +16,26 @@ export async function POST(req: Request) {
       marketIndex,
       body.amount
     );
-
-    const user = await driftClient.getUser();
-
     const associatedTokenAccount = await driftClient.getAssociatedTokenAccount(
       marketIndex
     );
 
-    const tx = await driftClient.deposit(
+    const tx = await driftClient.withdraw(
       amountToBN,
       marketIndex,
       associatedTokenAccount,
+      undefined,
       body.accountId
     );
-    console.log("ACC", tx);
 
     return NextResponse.json({
-      message: "Deposite Successfull",
+      message: "Withdrawl Successfull",
       tx: tx,
     });
   } catch (error) {
-    console.log("ERROR deposite", error);
+    console.log("Error", error);
     return NextResponse.json({
-      message: "Failed to deposite",
-    });
+        message: "Failed to deposite",
+      });
   }
 }

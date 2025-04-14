@@ -1,6 +1,7 @@
+"use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { number, z, ZodSchema } from "zod";
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -14,11 +15,9 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { useContext, useState } from "react";
-import { useStore } from "zustand";
-import useClientStore from "@/app/store/clientStore";
+
 import {
   Card,
-  CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
@@ -33,14 +32,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 const formSchema = z.object({
-  amount: z.coerce
-    .number()
-    .min(1, {
-      message: "Minimum 1 SOL required",
-    })
-    .max(10, {
-      message: "Maximim limit is 10 SOL",
-    }),
+  amount: z.coerce.number().min(1, {
+    message: "Minimum 1 SOL required",
+  }),
   accountId: z.coerce.number().min(0, { message: "Invalid Account Id" }),
 });
 
