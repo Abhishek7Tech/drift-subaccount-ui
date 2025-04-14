@@ -36,41 +36,35 @@ export async function POST(req: Request) {
     await driftClient.subscribe();
     console.log("BODY", body);
 
-    let order = undefined;
+    const orderTypeShort = {
+      orderType: OrderType.LIMIT,
+      marketIndex: 0,
+      direction: PositionDirection.SHORT,
+      baseAssetAmount: driftClient.convertToPerpPrecision(body.baseAssetAmount),
+      price: driftClient.convertToPricePrecision(body.price),
+      oraclePriceOffset: driftClient.convertToPricePrecision(0.05).toNumber(),
+    };
 
-    if (body.direction === "short") {
-      order = await driftClient.placePerpOrder(
-        {
-          orderType: OrderType.LIMIT,
-          marketIndex: 0,
-          direction: PositionDirection.SHORT,
-          baseAssetAmount: driftClient.convertToPerpPrecision(
-            body.baseAssetAmount
-          ),
-          price: driftClient.convertToPricePrecision(body.price),
-          oraclePriceOffset: driftClient
-            .convertToPricePrecision(0.05)
-            .toNumber(),
-        },
-        undefined,
-        accountId
-      );
-    } else {
-      order = await driftClient.placePerpOrder(
-        {
-          orderType: OrderType.LIMIT,
-          marketIndex: 0,
-          direction: PositionDirection.LONG,
-          baseAssetAmount: driftClient.convertToPerpPrecision(
-            body.baseAssetAmount
-          ),
-          price: driftClient.convertToPricePrecision(body.price),
-        },
-        undefined,
-        accountId
-      );
-    }
-    console.log("Order", order);
+    const orderTypeLong = {
+      orderType: OrderType.LIMIT,
+      marketIndex: 0,
+      direction: PositionDirection.LONG,
+      baseAssetAmount: driftClient.convertToPerpPrecision(body.baseAssetAmount),
+      price: driftClient.convertToPricePrecision(body.price),
+    };
+
+    const order =
+      body.direction === "short"
+        ? await driftClient.placePerpOrder(
+            orderTypeShort,
+            undefined,
+            body.accountId
+          )
+        : await driftClient.placePerpOrder(
+            orderTypeLong,
+            undefined,
+            body.accountId
+          );
 
     return NextResponse.json({
       message: "Order Successful.",
