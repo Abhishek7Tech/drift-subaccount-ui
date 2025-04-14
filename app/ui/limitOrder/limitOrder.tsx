@@ -1,6 +1,6 @@
-"use client";
 import { ClientContext } from "@/app/providers/ClientProvider";
 import { Button } from "@/components/ui/button";
+
 import {
   Card,
   CardContent,
@@ -18,7 +18,6 @@ import {
 } from "@/components/ui/form";
 
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -29,55 +28,40 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
-
 import z from "zod";
 
 const formSchema = z.object({
   accountId: z.coerce.number().min(0, { message: "Invalid Account Id" }),
-
   direction: z.string(),
-  baseAssetAmount: z.coerce.number().min(0.1, { message: "Value should be > 0.1" }),
-  startPrice: z.coerce.number().min(1, { message: "Value should be > 1" }),
-  endPrice: z.coerce.number().min(1, { message: "Value should be > 1" }),
+  baseAssetAmount: z.coerce.number().min(0.1, { message: "Value should be > 1" }),
   price: z.coerce.number().min(1, { message: "Value should be > 1" }),
-  duration: z.coerce
-    .number()
-    .min(30, { message: "Minimum duration should be 30 seconds" }),
 });
 
-const MarketOrder = () => {
+const LimitOrder = () => {
   const [txId, setTxId] = useState<undefined | string>(undefined);
-  const [message, setMessage] = useState<undefined | string>(undefined);
+
   const clientContext = useContext(ClientContext);
   if (!clientContext) {
     return;
   }
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       direction: "long",
       accountId: 0,
       baseAssetAmount: 0.1,
-      startPrice: 1,
-      endPrice: 1,
       price: 1,
-      duration: 30,
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log("Values", values);
     const accountId = values.accountId;
     const direction = values.direction;
     const baseAssetAmount = values.baseAssetAmount;
-    const startPrice = values.startPrice;
-    const endPrice = values.endPrice;
     const price = values.price;
-    const duration = values.duration;
 
     try {
-      const req = await fetch("/api/order/market", {
+      const req = await fetch("api/order/limit", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -86,28 +70,26 @@ const MarketOrder = () => {
           accountId,
           direction,
           baseAssetAmount,
-          startPrice,
-          endPrice,
           price,
-          duration,
         }),
       });
       const res = await req.json();
       console.log("Res", res);
+
       if (res?.txId) {
         setTxId(txId);
       }
     } catch (error) {
       console.log("Error", error);
-      // setMessage(error?.message);
     }
+    console.log("Values", values);
   }
   return (
     <>
       <Card className="space-y-8 min-w-96 mx-auto bg-gray-50 rounded-xl shadow-gray-500 p-4">
         <CardHeader>
-          <CardTitle>Market Order</CardTitle>
-          <CardDescription>Make a market order.</CardDescription>
+          <CardTitle>Limit Order</CardTitle>
+          <CardDescription>Make a limit order.</CardDescription>
         </CardHeader>
         <>
           <Form {...form}>
@@ -142,6 +124,7 @@ const MarketOrder = () => {
                     )}
                   />
                 </div>
+
                 <div className="flex flex-col space-y-1.5">
                   <FormField
                     control={form.control}
@@ -193,55 +176,6 @@ const MarketOrder = () => {
                     )}
                   />
                 </div>
-
-                <div className="flex flex-col space-y-1.5 w-full">
-                  <FormField
-                    control={form.control}
-                    name="startPrice"
-                    render={({ field }) => (
-                      <>
-                        <FormItem>
-                          <FormLabel htmlFor="startPrice">
-                            Auction Start Price
-                          </FormLabel>
-                          <Input
-                            type="number"
-                            id="startPrice"
-                            min={1}
-                            step={0.001}
-                            placeholder="21.10"
-                            {...field}
-                          />
-                        </FormItem>
-                      </>
-                    )}
-                  />
-                </div>
-
-                <div className="flex flex-col space-y-1.5 w-full">
-                  <FormField
-                    control={form.control}
-                    name="endPrice"
-                    render={({ field }) => (
-                      <>
-                        <FormItem>
-                          <FormLabel htmlFor="endPrice">
-                            Auction End Price
-                          </FormLabel>
-                          <Input
-                            type="number"
-                            min={1}
-                            id="endPrice"
-                            step={0.001}
-                            placeholder="21.20"
-                            {...field}
-                          />
-                        </FormItem>
-                      </>
-                    )}
-                  />
-                </div>
-
                 <div className="flex flex-col space-y-1.5 w-full">
                   <FormField
                     control={form.control}
@@ -256,30 +190,6 @@ const MarketOrder = () => {
                             step={0.001}
                             id="price"
                             placeholder="30.22"
-                            {...field}
-                          />
-                        </FormItem>
-                      </>
-                    )}
-                  />
-                </div>
-
-                <div className="flex flex-col space-y-1.5 w-full">
-                  <FormField
-                    control={form.control}
-                    name="duration"
-                    render={({ field }) => (
-                      <>
-                        <FormItem>
-                          <FormLabel htmlFor="duration">
-                            Auction Duration
-                          </FormLabel>
-                          <Input
-                            type="number"
-                            min={30}
-                            step={1}
-                            id="duration"
-                            placeholder="30"
                             {...field}
                           />
                         </FormItem>
@@ -305,4 +215,4 @@ const MarketOrder = () => {
   );
 };
 
-export default MarketOrder;
+export default LimitOrder;

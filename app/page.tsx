@@ -7,6 +7,7 @@ import InitializeForm from "./ui/initializeUser/initialize";
 import DepositeForm from "./ui/deposit/deposite";
 import AccountTable from "./ui/accountsTable/accounts";
 import MarketOrder from "./ui/marketOrder/marketOrder";
+import LimitOrder from "./ui/limitOrder/limitOrder";
 export default function Home() {
   const [isClient, setIsClient] = useState(false);
 
@@ -24,6 +25,7 @@ export default function Home() {
       <DepositeForm />
       <AccountTable />
       <MarketOrder />
+      <LimitOrder />
     </div>
   );
 }

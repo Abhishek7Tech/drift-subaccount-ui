@@ -28,10 +28,8 @@ export async function POST(req: Request) {
     if (!driftClient) {
       throw new Error("Failed to create client");
     }
-   await driftClient?.subscribe();
+   await driftClient.subscribe();
 
-    const user = driftClient.getUser(body.accountId, wallet.publicKey);
-    console.log("Active id", driftClient.activeSubAccountId, user);
     const positionDirection =
       body.direction === "long"
         ? PositionDirection.LONG
@@ -53,12 +51,12 @@ export async function POST(req: Request) {
         maxTs,
       },
       undefined,
-      body.accountId
+      accountId
     );
     console.log("Order", order);
     return NextResponse.json({
       message: "Order Successful.",
-      activeId: driftClient.activeSubAccountId,
+      txId: order,
     });
   } catch (error) {
     console.log("Error market", error);
