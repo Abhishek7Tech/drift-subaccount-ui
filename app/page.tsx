@@ -9,6 +9,7 @@ import AccountTable from "./ui/accountsTable/accounts";
 import MarketOrder from "./ui/marketOrder/marketOrder";
 import LimitOrder from "./ui/limitOrder/limitOrder";
 import WithdrawlForm from "./ui/withdraw/withdraw";
+import SearchAccount from "./ui/search/searchUser";
 export default function Home() {
   const [isClient, setIsClient] = useState(false);
 
@@ -22,6 +23,7 @@ export default function Home() {
       <h1 className="text-black">
         {isWalletConnected ? "Connected" : "Disconnected"}
       </h1>
+      <SearchAccount />
       <InitializeForm />
       <DepositeForm />
       <WithdrawlForm />

@@ -58,12 +58,12 @@ export async function POST(req: Request) {
         ? await driftClient.placePerpOrder(
             orderTypeShort,
             undefined,
-            body.accountId
+            accountId
           )
         : await driftClient.placePerpOrder(
             orderTypeLong,
             undefined,
-            body.accountId
+            accountId
           );
 
     return NextResponse.json({
