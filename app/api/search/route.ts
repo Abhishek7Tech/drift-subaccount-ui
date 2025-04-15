@@ -18,6 +18,9 @@ const NETWORK =
 export async function POST(req: Request) {
   const body: { pubKey: string } = await req.json();
   const userAccountToRead = new PublicKey(body.pubKey);
+  if (!userAccountToRead) {
+    throw new Error("Invalid wallet address.");
+  }
 
   try {
     const connection = new Connection(NETWORK, "confirmed");
@@ -81,33 +84,21 @@ export async function POST(req: Request) {
       return;
     }
 
-    console.log(
-      "User prototype methods:",
-      Object.getOwnPropertyNames(Object.getPrototypeOf(user))
-    );
-    console.log(
-      "ACC",
-      await user.subscribe(),
-      convertToNumber(user.getPerpPosition(0)?.quoteAssetAmount)
-    );
-    // console.log(
-    //   "ACC",
-    //   await convertToNumber(user.getUserAccount())
-    // );
-    // const netAccountBalanceBN = await user.getNetUsdValue();
-    // const netAccountBalance = +convertToNumber(netAccountBalanceBN).toFixed(2);
-    // console.log("Base asset", netAccountBalance);
-    // const balance = await user
-    // console.log("Balnance", balance);
-    const address = await user.getUserAccountPublicKey();
-    console.log("Address", address.toString());
-    const openOrders = user.getOpenOrders();
-    console.log("Open Orders", openOrders.length);
-    const accountInfo = {
+    console.log("ACC");
+    const userAccount = await user.getUserAccount();
+    const openOrders = convertToNumber(user.getPerpPosition(0)?.openOrders);
+    const address = user.userAccountPublicKey.toString();
+    const totalDeposits = convertToNumber(userAccount.totalDeposits);
+    const totalWithdraws = convertToNumber(userAccount.totalWithdraws);
+    const ownerAddress = userAccount.authority.toString();
+
+    const accountInfo = [{
       publicAddress: address,
-      //   baseAssetAmount,
-      openOrders: openOrders.length,
-    };
+      ownerAddress,
+      totalDeposits,
+      totalWithdraws,
+      openOrders,
+    }];
     return NextResponse.json({
       message: "User Account",
       accountInfo,

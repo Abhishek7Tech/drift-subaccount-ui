@@ -47,7 +47,7 @@ const AccountTable = () => {
   }, []);
   return (
     <>
-      <Table className="space-y-8 border mx-auto max-w-2xl bg-gray-50 rounded-xl shadow-sm shadow-gray-500 p-4">
+      <Table className="space-y-8  mx-auto max-w-2xl bg-gray-50 rounded-xl shadow-sm shadow-gray-500 p-4">
         <TableCaption>SubAccounts</TableCaption>
         <TableHeader>
           <TableRow>
