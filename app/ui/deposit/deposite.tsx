@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/form";
 
 import { Input } from "@/components/ui/input";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 
 import {
   Card,
@@ -39,8 +39,9 @@ const formSchema = z.object({
 });
 
 const DepositeForm = () => {
-  const [message, setMessage] = useState<undefined | string>(undefined);
+  const [message, setMessage] = useState<undefined | string>("Loading...");
   const [tx, setTx] = useState<undefined | string>(undefined);
+  const [loading, setLoading] = useState<boolean>(true);
   const clientContext = useContext(ClientContext);
   if (!clientContext) {
     return;
@@ -52,10 +53,20 @@ const DepositeForm = () => {
       accountId: 0,
     },
   });
+
+  useEffect(() => {
+    if (clientContext?.subIds) {
+      setMessage(undefined);
+      console.log("SETTING..loading");
+      setLoading(false);
+    }
+  }, [clientContext.subIds]);
   console.log(clientContext?.subIds);
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const amount = Number(values.amount);
     const accountId = Number(values.accountId);
+    setLoading(true);
+    setMessage("Depositing....");
     console.log("Amount", amount, accountId);
 
     try {
@@ -78,7 +89,9 @@ const DepositeForm = () => {
       }
     } catch (error) {
       setMessage("Something went Wrong.");
+      setLoading(false);
     }
+    setLoading(false);
   }
 
   return (
@@ -155,7 +168,11 @@ const DepositeForm = () => {
                   />
                 </div>
                 <CardFooter className="flex px-0  space-y-1.5 justify-between">
-                  <Button type="submit" className="cursor-pointer">
+                  <Button
+                    disabled={loading}
+                    type="submit"
+                    className="cursor-pointer"
+                  >
                     Deposite SOL
                   </Button>
                 </CardFooter>

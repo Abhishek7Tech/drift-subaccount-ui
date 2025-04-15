@@ -15,6 +15,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 
 import { Input } from "@/components/ui/input";
@@ -27,7 +28,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import z from "zod";
@@ -36,7 +37,9 @@ const formSchema = z.object({
   accountId: z.coerce.number().min(0, { message: "Invalid Account Id" }),
 
   direction: z.string(),
-  baseAssetAmount: z.coerce.number().min(0.1, { message: "Value should be > 0.1" }),
+  baseAssetAmount: z.coerce
+    .number()
+    .min(0.1, { message: "Value should be > 0.1" }),
   startPrice: z.coerce.number().min(1, { message: "Value should be > 1" }),
   endPrice: z.coerce.number().min(1, { message: "Value should be > 1" }),
   price: z.coerce.number().min(1, { message: "Value should be > 1" }),
@@ -46,8 +49,10 @@ const formSchema = z.object({
 });
 
 const MarketOrder = () => {
-  const [txId, setTxId] = useState<undefined | string>(undefined);
-  const [message, setMessage] = useState<undefined | string>(undefined);
+  const [tx, setTx] = useState<undefined | string>(undefined);
+  const [message, setMessage] = useState<undefined | string>("Loading...");
+  const [loading, setLoading] = useState<boolean>(true);
+
   const clientContext = useContext(ClientContext);
   if (!clientContext) {
     return;
@@ -65,6 +70,12 @@ const MarketOrder = () => {
       duration: 30,
     },
   });
+  useEffect(() => {
+    if (clientContext?.subIds) {
+      setMessage(undefined);
+      setLoading(false);
+    }
+  }, [clientContext.subIds]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log("Values", values);
@@ -75,7 +86,8 @@ const MarketOrder = () => {
     const endPrice = values.endPrice;
     const price = values.price;
     const duration = values.duration;
-
+    setLoading(true);
+    setMessage("Ordering....");
     try {
       const req = await fetch("/api/order/market", {
         method: "POST",
@@ -95,12 +107,15 @@ const MarketOrder = () => {
       const res = await req.json();
       console.log("Res", res);
       if (res?.txId) {
-        setTxId(txId);
+        setTx(res.txId);
+        setMessage("Order Successfull.")
       }
     } catch (error) {
       console.log("Error", error);
-      // setMessage(error?.message);
+      setLoading(false);
+      setMessage("Order Failed");
     }
+    setLoading(false);
   }
   return (
     <>
@@ -286,10 +301,20 @@ const MarketOrder = () => {
                       </>
                     )}
                   />
+                  {message && (
+                    <span className="text-green-400 font-medium">
+                      {message}
+                    </span>
+                  )}
+                  <FormMessage />
                 </div>
 
                 <CardFooter className="flex px-0  space-y-1.5 justify-between">
-                  <Button type="submit" className="cursor-pointer">
+                  <Button
+                    disabled={loading}
+                    type="submit"
+                    className="cursor-pointer"
+                  >
                     Order
                   </Button>
                 </CardFooter>
@@ -298,8 +323,8 @@ const MarketOrder = () => {
           </Form>
         </>
       </Card>
-      {txId && (
-        <p className="text-slate-800 text-center break-all">Tx Id: {txId}</p>
+      {tx && (
+        <p className="text-slate-800 text-center break-all">Tx Id: {tx}</p>
       )}
     </>
   );

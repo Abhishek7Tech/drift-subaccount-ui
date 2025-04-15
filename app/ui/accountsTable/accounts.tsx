@@ -17,8 +17,8 @@ interface SubAccounts {
   publicAddress: PublicKey;
   baseAssetAmount: any;
   netAccountBalance: number;
-  isShort: boolean;
-  isLong: boolean;
+  totalCollateral: number;
+  freeCollateral: number;
   openOrders: number;
 }
 [];
@@ -26,7 +26,7 @@ const AccountTable = () => {
   const [subAccounts, setSubAccounts] = useState<undefined | SubAccounts[]>(
     undefined
   );
-  const [message, setMessage] = useState<string | undefined>(undefined);
+  const [error, setError] = useState<string | undefined>(undefined);
   useEffect(() => {
     const fetchAccountsData = async () => {
       try {
@@ -39,7 +39,7 @@ const AccountTable = () => {
         }
       } catch (error) {
         console.log("Error", error);
-        setMessage("Something went wrong.");
+        setError("Something went wrong.");
       }
     };
 
@@ -54,35 +54,58 @@ const AccountTable = () => {
             <TableHead className="w-[100px]">Address</TableHead>
             <TableHead>Total Balance</TableHead>
             <TableHead>Perp Position</TableHead>
-            <TableHead>Is Short</TableHead>
-            <TableHead>Is Long</TableHead>
+            <TableHead>Total Collateral</TableHead>
+            <TableHead>Free Collateral</TableHead>
             <TableHead>Open Orders</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {subAccounts?.map((acc) => (
-            <TableRow key={acc.subAccountId}>
-              <TableCell className="font-medium">
-                {acc.publicAddress.toString()}
+          {subAccounts ? (
+            subAccounts?.map((acc) => (
+              <TableRow key={acc.subAccountId}>
+                <TableCell className="font-medium text-center">
+                  {acc.publicAddress.toString()}
+                </TableCell>
+                <TableCell className="text-center">
+                  {"$" + acc.netAccountBalance}
+                </TableCell>
+                <TableCell className="text-center">
+                  {acc.baseAssetAmount}
+                </TableCell>
+                <TableCell className="text-center">
+                {"$" + acc.totalCollateral }
+                </TableCell>
+                <TableCell className="text-center">
+                  {"$" + acc.freeCollateral}
+                </TableCell>
+                <TableCell className="text-center">{acc.openOrders}</TableCell>
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell className="text-center text-green-400">
+                Loading...
               </TableCell>
-              <TableCell className="text-center">
-                {"$" + acc.netAccountBalance}
+              <TableCell className="text-center text-green-400">
+                Loading...
               </TableCell>
-              <TableCell className="text-center">
-                {acc.baseAssetAmount}
+              <TableCell className="text-center text-green-400">
+                Loading...
               </TableCell>
-              <TableCell className="text-center">
-                {acc.isShort ? "True" : "False"}
+              <TableCell className="text-center text-green-400">
+                Loading...
               </TableCell>
-              <TableCell className="text-center">
-                {acc.isLong ? "True" : "False"}
+              <TableCell className="text-center text-green-400">
+                Loading...
               </TableCell>
-              <TableCell className="text-center">{acc.openOrders}</TableCell>
+              <TableCell className="text-center text-green-400">
+                Loading...
+              </TableCell>
             </TableRow>
-          ))}
+          )}
         </TableBody>
       </Table>
-      {message && <span className="text-red-500 font-medium">{message}</span>}
+      {error && <span className="text-red-500 font-medium">{error}</span>}
     </>
   );
 };

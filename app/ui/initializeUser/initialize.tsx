@@ -27,6 +27,7 @@ const formSchema = z.object({
 const InitializeFrom = () => {
   const [message, setMessage] = useState<undefined | string>(undefined);
   const [address, setAddress] = useState<undefined | string>(undefined);
+  const [loading, setLoading] = useState<boolean>(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -37,6 +38,8 @@ const InitializeFrom = () => {
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const userName = values.username;
+    setLoading(true);
+    setMessage("Initializing...");
     try {
       const req = await fetch("/api/initialize", {
         method: "POST",
@@ -51,42 +54,47 @@ const InitializeFrom = () => {
         setAddress(res.address.toString());
       }
     } catch (error) {
-      setMessage("Something went wrong.")
+      setMessage("Something went wrong.");
+      setLoading(false);
     }
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
+    setLoading(false);
     console.log(values);
   }
   return (
     <>
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-8 min-w-2xs mx-auto bg-gray-50 rounded-xl border shadow-sm shadow-gray-500 p-4"
-      >
-        <FormField
-          control={form.control}
-          name="username"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input type="text" placeholder="drift" {...field} />
-              </FormControl>
-              {message && <span className="text-green-400 font-medium">{message}</span>}
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-8 min-w-2xs mx-auto bg-gray-50 rounded-xl border shadow-sm shadow-gray-500 p-4"
+        >
+          <FormField
+            control={form.control}
+            name="username"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Username</FormLabel>
+                <FormControl>
+                  <Input type="text" placeholder="drift" {...field} />
+                </FormControl>
+                {message && (
+                  <span className="text-green-400 font-medium">{message}</span>
+                )}
 
-              <FormMessage />
-            </FormItem>
-          )}
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        <Button type="submit" className="cursor-pointer">
-          Initialize Account
-        </Button>
-      </form>
-    </Form>
-          {address && <p className="text-slate-800 text-center break-all">Public address: {address}</p>}
+          <Button disabled={loading} type="submit" className="cursor-pointer">
+            Initialize Account
+          </Button>
+        </form>
+      </Form>
+      {address && (
+        <p className="text-slate-800 text-center break-all">
+          Public address: {address}
+        </p>
+      )}
     </>
-
   );
 };
 

@@ -21,7 +21,6 @@ export async function GET() {
       throw new Error("Failed to create client");
     }
 
-    
     await driftClient.subscribe();
 
     const wallet = new Wallet(loadKeypair(process.env.NEXT_PUBLIC_KEY_PAIR));
@@ -41,18 +40,19 @@ export async function GET() {
         const netAccountBalanceBN = user.getNetUsdValue();
         const netAccountBalance =
           +convertToNumber(netAccountBalanceBN).toFixed(2);
-        
-        const isShort = baseAssetAmount < 0;
-        const isLong = baseAssetAmount > 0;
+
+        const totalCollateral = convertToNumber(user.getTotalCollateral());
+        const freeCollateral = convertToNumber(user.getFreeCollateral());
+
         const openOrders = acc.openOrders;
-   
+
         return {
           subAccountId,
           publicAddress: address,
           baseAssetAmount,
           netAccountBalance,
-          isShort: isShort,
-          isLong: isLong,
+          totalCollateral,
+          freeCollateral,
           openOrders,
         };
       })

@@ -1,7 +1,7 @@
 "use client";
 import { ClientContext } from "@/app/providers/ClientProvider";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import {
@@ -39,8 +39,10 @@ const formSchema = z.object({
 });
 
 const WithdrawlForm = () => {
-  const [message, setMessage] = useState<undefined | string>(undefined);
+  const [message, setMessage] = useState<undefined | string>("Loading...");
   const [tx, setTx] = useState<undefined | string>(undefined);
+  const [loading, setLoading] = useState<boolean>(true);
+
   const clientContext = useContext(ClientContext);
   if (!clientContext) {
     return;
@@ -52,10 +54,18 @@ const WithdrawlForm = () => {
       accountId: 0,
     },
   });
-
+  useEffect(() => {
+    if (clientContext?.subIds) {
+      setMessage(undefined);
+      console.log("SETTING..loading");
+      setLoading(false);
+    }
+  }, [clientContext.subIds]);
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const amount = Number(values.amount);
     const accountId = Number(values.accountId);
+    setLoading(true);
+    setMessage("Withdrawing....");
     console.log("Amount", amount, accountId);
 
     try {
@@ -78,7 +88,9 @@ const WithdrawlForm = () => {
       }
     } catch (error) {
       setMessage("Something went Wrong.");
+      setLoading(false);
     }
+    setLoading(false);
   }
 
   return (
@@ -155,7 +167,11 @@ const WithdrawlForm = () => {
                   />
                 </div>
                 <CardFooter className="flex px-0  space-y-1.5 justify-between">
-                  <Button type="submit" className="cursor-pointer">
+                  <Button
+                    disabled={loading}
+                    type="submit"
+                    className="cursor-pointer"
+                  >
                     Withdraw SOL
                   </Button>
                 </CardFooter>

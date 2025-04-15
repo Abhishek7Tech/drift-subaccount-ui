@@ -15,6 +15,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 
 import { Input } from "@/components/ui/input";
@@ -26,19 +27,23 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
 
 const formSchema = z.object({
   accountId: z.coerce.number().min(0, { message: "Invalid Account Id" }),
   direction: z.string(),
-  baseAssetAmount: z.coerce.number().min(0.1, { message: "Value should be > 1" }),
+  baseAssetAmount: z.coerce
+    .number()
+    .min(0.1, { message: "Value should be > 1" }),
   price: z.coerce.number().min(1, { message: "Value should be > 1" }),
 });
 
 const LimitOrder = () => {
-  const [txId, setTxId] = useState<undefined | string>(undefined);
+  const [tx, setTx] = useState<undefined | string>(undefined);
+  const [message, setMessage] = useState<undefined | string>("Loading...");
+  const [loading, setLoading] = useState<boolean>(true);
 
   const clientContext = useContext(ClientContext);
   if (!clientContext) {
@@ -53,13 +58,19 @@ const LimitOrder = () => {
       price: 1,
     },
   });
-
+  useEffect(() => {
+    if (clientContext?.subIds) {
+      setMessage(undefined);
+      setLoading(false);
+    }
+  }, [clientContext.subIds]);
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const accountId = values.accountId;
     const direction = values.direction;
     const baseAssetAmount = values.baseAssetAmount;
     const price = values.price;
-
+    setLoading(true);
+    setMessage("Ordering....");
     try {
       const req = await fetch("api/order/limit", {
         method: "POST",
@@ -77,11 +88,15 @@ const LimitOrder = () => {
       console.log("Res", res);
 
       if (res?.txId) {
-        setTxId(txId);
+        setTx(res.txId);
+        setMessage("Order Successfull.");
       }
     } catch (error) {
       console.log("Error", error);
+      setLoading(false);
+      setMessage("Order Failed");
     }
+    setLoading(false);
     console.log("Values", values);
   }
   return (
@@ -196,10 +211,20 @@ const LimitOrder = () => {
                       </>
                     )}
                   />
+                  {message && (
+                    <span className="text-green-400 font-medium">
+                      {message}
+                    </span>
+                  )}
+                  <FormMessage />
                 </div>
 
                 <CardFooter className="flex px-0  space-y-1.5 justify-between">
-                  <Button type="submit" className="cursor-pointer">
+                  <Button
+                    disabled={loading}
+                    type="submit"
+                    className="cursor-pointer"
+                  >
                     Order
                   </Button>
                 </CardFooter>
@@ -208,8 +233,8 @@ const LimitOrder = () => {
           </Form>
         </>
       </Card>
-      {txId && (
-        <p className="text-slate-800 text-center break-all">Tx Id: {txId}</p>
+      {tx && (
+        <p className="text-slate-800 text-center break-all">Tx Id: {tx}</p>
       )}
     </>
   );
