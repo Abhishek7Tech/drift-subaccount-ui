@@ -44,6 +44,7 @@ const LimitOrder = () => {
   const [tx, setTx] = useState<undefined | string>(undefined);
   const [message, setMessage] = useState<undefined | string>("Loading...");
   const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<undefined | string>(undefined);
 
   const clientContext = useContext(ClientContext);
   if (!clientContext) {
@@ -71,6 +72,7 @@ const LimitOrder = () => {
     const price = values.price;
     setLoading(true);
     setMessage("Ordering....");
+    setError(undefined);
     try {
       const req = await fetch("api/order/limit", {
         method: "POST",
@@ -87,14 +89,18 @@ const LimitOrder = () => {
       const res = await req.json();
       console.log("Res", res);
 
-      if (res?.txId) {
-        setTx(res.txId);
-        setMessage("Order Successfull.");
+      if (req?.status === 200) {
+        setTx(res.tx);
+        setError(undefined);
+        setMessage(res.message);
+      } else {
+        setError(res.message);
+        setMessage(undefined);
       }
     } catch (error) {
       console.log("Error", error);
       setLoading(false);
-      setMessage("Order Failed");
+      setError("Something went Wrong.");
     }
     setLoading(false);
     console.log("Values", values);
@@ -215,6 +221,9 @@ const LimitOrder = () => {
                     <span className="text-green-400 font-medium">
                       {message}
                     </span>
+                  )}
+                  {error && (
+                    <span className="text-red-400 font-medium">{error}</span>
                   )}
                   <FormMessage />
                 </div>

@@ -1,9 +1,8 @@
-import { z, ZodSchema } from "zod";
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -15,6 +14,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { PublicKey } from "@solana/web3.js";
 import { useState } from "react";
 import SearchAccountTable from "../searchAccountTable/search";
+import { NextResponse } from "next/server";
 
 interface AccountInfo {
   publicAddress: string;
@@ -33,12 +33,16 @@ const SearchAccount = () => {
   const [accountInfo, setAccountInfo] = useState<undefined | AccountInfo[]>(
     undefined
   );
+  const [loading, setLoading] = useState<boolean>(false);
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const pubKey = values.pubKey;
+    setLoading(true);
+    setErrorMsg(undefined);
     console.log("PUBKEY", pubKey);
     const pubKeyToBN = new PublicKey(pubKey);
     if (!pubKeyToBN) {
       setErrorMsg("Invalid wallet address.");
+      setLoading(false);
       return;
     }
 
@@ -51,12 +55,18 @@ const SearchAccount = () => {
         body: JSON.stringify({ pubKey }),
       });
       const res = await req.json();
-      if (res?.accountInfo) {
-        console.log("RES", res);
+      console.log("RES", res.ok);
+      if (req.status === 200) {
         setAccountInfo(res.accountInfo);
+        setErrorMsg(undefined);
+      } else {
+        setErrorMsg(res.message);
       }
+      setLoading(false);
     } catch (error) {
       console.log("Error", error);
+      setErrorMsg("Something went wrong.");
+      setLoading(false);
     }
   }
 
@@ -87,19 +97,19 @@ const SearchAccount = () => {
                     {...field}
                   />
                 </FormControl>
-                {errorMsg && (
-                  <span className="text-red-500 font-medium">{errorMsg}</span>
-                )}
 
                 <FormMessage />
               </FormItem>
             )}
           />
-          <Button type="submit" className="cursor-pointer">
+          <Button disabled={loading} type="submit" className="cursor-pointer">
             Search
           </Button>
         </form>
       </Form>
+      {errorMsg && (
+        <span className="text-red-500 font-medium text-center">{errorMsg}</span>
+      )}
       {accountInfo && <SearchAccountTable accountInfo={accountInfo} />}
     </div>
   );

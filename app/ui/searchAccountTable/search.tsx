@@ -8,10 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ProgramAccount } from "@coral-xyz/anchor";
-import { BN, UserAccount } from "@drift-labs/sdk";
-import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
-import { useEffect, useState } from "react";
+
 
 interface AccountInfo {
   publicAddress: string;

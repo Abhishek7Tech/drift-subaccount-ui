@@ -52,6 +52,7 @@ const MarketOrder = () => {
   const [tx, setTx] = useState<undefined | string>(undefined);
   const [message, setMessage] = useState<undefined | string>("Loading...");
   const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<undefined | string>(undefined);
 
   const clientContext = useContext(ClientContext);
   if (!clientContext) {
@@ -88,6 +89,7 @@ const MarketOrder = () => {
     const duration = values.duration;
     setLoading(true);
     setMessage("Ordering....");
+    setError(undefined);
     try {
       const req = await fetch("/api/order/market", {
         method: "POST",
@@ -106,14 +108,17 @@ const MarketOrder = () => {
       });
       const res = await req.json();
       console.log("Res", res);
-      if (res?.txId) {
+      if (req.status === 200) {
         setTx(res.txId);
-        setMessage("Order Successfull.")
+        setMessage(res.message);
+      } else {
+        setError(res.message);
+        setMessage(undefined);
       }
     } catch (error) {
       console.log("Error", error);
       setLoading(false);
-      setMessage("Order Failed");
+      setError("Order Failed");
     }
     setLoading(false);
   }
@@ -305,6 +310,10 @@ const MarketOrder = () => {
                     <span className="text-green-400 font-medium">
                       {message}
                     </span>
+                  )}
+
+                  {error && (
+                    <span className="text-red-400 font-medium">{error}</span>
                   )}
                   <FormMessage />
                 </div>

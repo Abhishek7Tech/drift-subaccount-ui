@@ -58,14 +58,20 @@ export async function GET() {
       })
     );
     console.log("Sup account", subAccounts);
-    return NextResponse.json({
-      message: "User Accounts",
-      subAccounts,
-    });
+    return NextResponse.json(
+      {
+        message: "User Accounts",
+        subAccounts,
+      },
+      { status: 200 }
+    );
   } catch (error) {
     console.log("Error", error);
-    return NextResponse.json({
-      message: "Failed to Fetch Accounts.",
-    });
+    return NextResponse.json(
+      {
+        message: "Failed to Fetch Accounts.",
+      },
+      { status: 500 }
+    );
   }
 }

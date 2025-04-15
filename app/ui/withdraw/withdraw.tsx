@@ -42,6 +42,7 @@ const WithdrawlForm = () => {
   const [message, setMessage] = useState<undefined | string>("Loading...");
   const [tx, setTx] = useState<undefined | string>(undefined);
   const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<undefined | string>(undefined);
 
   const clientContext = useContext(ClientContext);
   if (!clientContext) {
@@ -66,6 +67,8 @@ const WithdrawlForm = () => {
     const accountId = Number(values.accountId);
     setLoading(true);
     setMessage("Withdrawing....");
+    setError(undefined);
+
     console.log("Amount", amount, accountId);
 
     try {
@@ -79,15 +82,16 @@ const WithdrawlForm = () => {
 
       const res = await req.json();
 
-      if (res?.message) {
-        setMessage(res.message);
-      }
-
-      if (res?.tx) {
+      if (req?.status === 200) {
         setTx(res.tx);
+        setError(undefined);
+        setMessage(res.message);
+      } else {
+        setError(res.message);
+        setMessage(undefined);
       }
     } catch (error) {
-      setMessage("Something went Wrong.");
+      setError("Something went Wrong.");
       setLoading(false);
     }
     setLoading(false);
@@ -159,6 +163,11 @@ const WithdrawlForm = () => {
                         {message && (
                           <span className="text-green-400 font-medium">
                             {message}
+                          </span>
+                        )}
+                        {error && (
+                          <span className="text-red-400 font-medium">
+                            {error}
                           </span>
                         )}
                         <FormMessage />

@@ -28,6 +28,7 @@ const InitializeFrom = () => {
   const [message, setMessage] = useState<undefined | string>(undefined);
   const [address, setAddress] = useState<undefined | string>(undefined);
   const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<undefined | string>(undefined);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -40,6 +41,7 @@ const InitializeFrom = () => {
     const userName = values.username;
     setLoading(true);
     setMessage("Initializing...");
+    setError(undefined);
     try {
       const req = await fetch("/api/initialize", {
         method: "POST",
@@ -49,16 +51,19 @@ const InitializeFrom = () => {
         body: JSON.stringify(userName),
       });
       const res = await req.json();
-      if (res?.message) {
+      if (req.status === 200) {
         setMessage(`${res.message}`);
         setAddress(res.address.toString());
+        setError(undefined);
+      } else {
+        setError(res.message);
+        setMessage(undefined);
       }
     } catch (error) {
-      setMessage("Something went wrong.");
+      setError("Something went wrong.");
       setLoading(false);
     }
     setLoading(false);
-    console.log(values);
   }
   return (
     <>
@@ -78,6 +83,9 @@ const InitializeFrom = () => {
                 </FormControl>
                 {message && (
                   <span className="text-green-400 font-medium">{message}</span>
+                )}
+                {error && (
+                  <span className="text-red-400 font-medium">{error}</span>
                 )}
 
                 <FormMessage />

@@ -10,13 +10,17 @@ export async function POST(req: Request) {
     if (!driftClient) {
       throw new Error("Failed to create client");
     }
+
     await driftClient.subscribe();
     const accountId = await driftClient.getNextSubAccountId();
 
     if (accountId > 8) {
-      return NextResponse.json({
-        message: "Account limit reached",
-      });
+      return NextResponse.json(
+        {
+          message: "Account limit reached",
+        },
+        { status: 500 }
+      );
     }
     const [txSig, userPublicKey] = await driftClient.initializeUserAccount(
       accountId,
@@ -27,6 +31,8 @@ export async function POST(req: Request) {
       message: "Initialized User.",
       signature: txSig,
       address: userPublicKey,
+    }, {
+      status: 200
     });
   } catch (error) {
     console.log("Error", error);

@@ -20,8 +20,6 @@ export async function POST(req: Request) {
       body.amount
     );
 
-    const user = await driftClient.getUser();
-
     const associatedTokenAccount = await driftClient.getAssociatedTokenAccount(
       marketIndex
     );
@@ -34,14 +32,22 @@ export async function POST(req: Request) {
     );
     console.log("ACC", tx);
 
-    return NextResponse.json({
-      message: "Deposite Successfull",
-      tx: tx,
-    });
+    return NextResponse.json(
+      {
+        message: "Deposite Successfull",
+        tx: tx,
+      },
+      { status: 200 }
+    );
   } catch (error) {
     console.log("ERROR deposite", error);
-    return NextResponse.json({
-      message: "Failed to deposite",
-    });
+    return NextResponse.json(
+      {
+        message: "Failed to deposite",
+      },
+      {
+        status: 500,
+      }
+    );
   }
 }

@@ -9,6 +9,7 @@ export async function POST(req: Request) {
     if (!driftClient) {
       throw new Error("Failed to create client.");
     }
+
     await driftClient.subscribe();
 
     const marketIndex = 1; //SOL
@@ -28,14 +29,22 @@ export async function POST(req: Request) {
       body.accountId
     );
 
-    return NextResponse.json({
-      message: "Withdrawl Successfull",
-      tx: tx,
-    });
+    return NextResponse.json(
+      {
+        message: "Withdraw Successfull",
+        tx: tx,
+      },
+      {
+        status: 200,
+      }
+    );
   } catch (error) {
     console.log("Error", error);
-    return NextResponse.json({
-        message: "Failed to deposite",
-      });
+    return NextResponse.json(
+      {
+        message: "Failed to Withdraw",
+      },
+      { status: 500 }
+    );
   }
 }

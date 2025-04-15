@@ -1,5 +1,12 @@
 import { createClient } from "@/app/utils/createClient";
-import { BN, convertToBN, loadKeypair, OrderType, PositionDirection, Wallet } from "@drift-labs/sdk";
+import {
+  BN,
+  convertToBN,
+  loadKeypair,
+  OrderType,
+  PositionDirection,
+  Wallet,
+} from "@drift-labs/sdk";
 import { NextResponse } from "next/server";
 import { date } from "zod";
 
@@ -13,22 +20,23 @@ export async function POST(req: Request) {
     price: number;
     duration: number;
   } = await req.json();
- if (!process.env.NEXT_PUBLIC_KEY_PAIR) {
-      throw new Error("Key pair not found.");
-    }
-    const wallet = new Wallet(loadKeypair(process.env.NEXT_PUBLIC_KEY_PAIR));
+  if (!process.env.NEXT_PUBLIC_KEY_PAIR) {
+    throw new Error("Key pair not found.");
+  }
+  const wallet = new Wallet(loadKeypair(process.env.NEXT_PUBLIC_KEY_PAIR));
 
-    if (!wallet) {
-      console.log("Wallet not found");
-      return;
-    }
+  if (!wallet) {
+    console.log("Wallet not found");
+    return;
+  }
   try {
     const accountId = body.accountId;
     const driftClient = await createClient();
     if (!driftClient) {
       throw new Error("Failed to create client");
     }
-   await driftClient.subscribe();
+
+    await driftClient.subscribe();
 
     const positionDirection =
       body.direction === "long"
@@ -54,14 +62,24 @@ export async function POST(req: Request) {
       accountId
     );
     console.log("Order", order);
-    return NextResponse.json({
-      message: "Order Successful.",
-      txId: order,
-    });
+    return NextResponse.json(
+      {
+        message: "Order Successful.",
+        txId: order,
+      },
+      {
+        status: 200,
+      }
+    );
   } catch (error) {
     console.log("Error market", error);
-    return NextResponse.json({
-      message: "Failed to Order.",
-    });
+    return NextResponse.json(
+      {
+        message: "Failed to Place Order.",
+      },
+      {
+        status: 500,
+      }
+    );
   }
 }

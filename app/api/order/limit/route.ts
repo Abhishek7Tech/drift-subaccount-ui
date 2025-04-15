@@ -55,25 +55,23 @@ export async function POST(req: Request) {
 
     const order =
       body.direction === "short"
-        ? await driftClient.placePerpOrder(
-            orderTypeShort,
-            undefined,
-            accountId
-          )
-        : await driftClient.placePerpOrder(
-            orderTypeLong,
-            undefined,
-            accountId
-          );
+        ? await driftClient.placePerpOrder(orderTypeShort, undefined, accountId)
+        : await driftClient.placePerpOrder(orderTypeLong, undefined, accountId);
 
-    return NextResponse.json({
-      message: "Order Successful.",
-      txId: order,
-    });
+    return NextResponse.json(
+      {
+        message: "Order Successful.",
+        txId: order,
+      },
+      { status: 200 }
+    );
   } catch (error) {
     console.log("Order limit", error);
-    return NextResponse.json({
-      message: "Failed to Order.",
-    });
+    return NextResponse.json(
+      {
+        message: "Failed to Order.",
+      },
+      { status: 500 }
+    );
   }
 }

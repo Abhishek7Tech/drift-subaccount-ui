@@ -32,9 +32,16 @@ const AccountTable = () => {
       try {
         const req = await fetch("/api/accounts");
         console.log("Fetching...");
+        setError(undefined);
         const res = await req.json();
-        if (res?.subAccounts) {
+        if (req.status === 200) {
           setSubAccounts(res.subAccounts);
+          setError(undefined);
+        } else {
+          setError(res.message);
+        }
+
+        if (res?.subAccounts) {
           console.log("RES", res.subAccounts);
         }
       } catch (error) {
@@ -73,7 +80,7 @@ const AccountTable = () => {
                   {acc.baseAssetAmount}
                 </TableCell>
                 <TableCell className="text-center">
-                {"$" + acc.totalCollateral }
+                  {"$" + acc.totalCollateral}
                 </TableCell>
                 <TableCell className="text-center">
                   {"$" + acc.freeCollateral}
@@ -84,28 +91,30 @@ const AccountTable = () => {
           ) : (
             <TableRow>
               <TableCell className="text-center text-green-400">
-                Loading...
+                {!error && "Loading..."}
               </TableCell>
               <TableCell className="text-center text-green-400">
-                Loading...
+                {!error && "Loading..."}
               </TableCell>
               <TableCell className="text-center text-green-400">
-                Loading...
+                {!error && "Loading..."}
               </TableCell>
               <TableCell className="text-center text-green-400">
-                Loading...
+                {!error && "Loading..."}
               </TableCell>
               <TableCell className="text-center text-green-400">
-                Loading...
+                {!error && "Loading..."}
               </TableCell>
               <TableCell className="text-center text-green-400">
-                Loading...
+                {!error && "Loading..."}
               </TableCell>
             </TableRow>
           )}
         </TableBody>
       </Table>
-      {error && <span className="text-red-500 font-medium">{error}</span>}
+      {error && (
+        <span className="text-red-500 text-center font-medium">{error}</span>
+      )}
     </>
   );
 };

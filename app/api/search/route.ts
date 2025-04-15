@@ -41,12 +41,6 @@ export async function POST(req: Request) {
       (market) => market.marketIndex === 1
     )!;
 
-    const bulkAccountLoader = new BulkAccountLoader(
-      connection,
-      "confirmed",
-      500
-    );
-
     const driftClient = new DriftClient({
       connection,
       accountSubscription: {
@@ -74,14 +68,11 @@ export async function POST(req: Request) {
         type: "websocket", // Use polling with bulkAccountLoader
       },
     });
-    // console.log("USER", user.subscribe());
-    // await user.subscribe();
-
+    
     await user.subscribe();
 
     if (!user.isSubscribed) {
-      console.log("USER NEVER FETCHED");
-      return;
+      throw new Error("Failed to fetch account.");
     }
 
     console.log("ACC");
@@ -92,21 +83,30 @@ export async function POST(req: Request) {
     const totalWithdraws = convertToNumber(userAccount.totalWithdraws);
     const ownerAddress = userAccount.authority.toString();
 
-    const accountInfo = [{
-      publicAddress: address,
-      ownerAddress,
-      totalDeposits,
-      totalWithdraws,
-      openOrders,
-    }];
-    return NextResponse.json({
-      message: "User Account",
-      accountInfo,
-    });
+    const accountInfo = [
+      {
+        publicAddress: address,
+        ownerAddress,
+        totalDeposits,
+        totalWithdraws,
+        openOrders,
+      },
+    ];
+    return NextResponse.json(
+      {
+        message: "User Account",
+        accountInfo,
+        
+      },
+      { status: 200 }
+    );
   } catch (error) {
     console.log("error", error);
-    return NextResponse.json({
-      message: "Failed to Fetch Accounts.",
-    });
+    return NextResponse.json(
+      {
+        message: "Failed to Fetch Accounts.",
+      },
+      { status: 500 }
+    );
   }
 }
