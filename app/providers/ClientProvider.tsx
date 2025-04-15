@@ -8,7 +8,7 @@ import {
 import { error } from "console";
 import { createContext, ReactNode, useEffect, useMemo, useState } from "react";
 import { useStore } from "zustand";
-import useClientStore from "../store/clientStore";
+import useClientStore from "../store/navStore";
 
 interface ClientInterface {
   isSubscribed: boolean;

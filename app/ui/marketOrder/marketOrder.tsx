@@ -104,7 +104,7 @@ const MarketOrder = () => {
   }
   return (
     <>
-      <Card className="space-y-8 min-w-96 mx-auto bg-gray-50 rounded-xl shadow-gray-500 p-4">
+      <Card className="space-y-8 mb-6 min-w-96 mx-auto bg-gray-50 rounded-xl shadow-gray-500 p-4">
         <CardHeader>
           <CardTitle>Market Order</CardTitle>
           <CardDescription>Make a market order.</CardDescription>
