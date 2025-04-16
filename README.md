@@ -1,5 +1,17 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Required .env variables
+```bash
+NEXT_PUBLIC_NETWORK_URL=https://rpc-devnet.helius.xyz/?api-key=YOUR_API_KEY
+NEXT_PUBLIC_KEY_PAIR=./keypair.json
+NEXT_PUBLIC_ENVIRONMENT=dev
+```
+
+## Add Keypair file
+/project-root
+├── keypair.json
+└── .env
+
 ## Getting Started
 
 First, run the development server:
