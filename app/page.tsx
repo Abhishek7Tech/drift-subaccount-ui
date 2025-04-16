@@ -36,43 +36,48 @@ export default function Home() {
   }, [wallet]);
 
   return (
-    <div className="flex flex-col space-y-12">
-      {isClient && <Navbar />}
+    <>
+      <div className="flex flex-col space-y-12 md:hidden items-center ">
+        <h1 className="text-3xl text-center">Not available on smaller screens.</h1>
+      </div>
+      <div className="md:flex flex-col space-y-12 hidden ">
+        {isClient && <Navbar />}
 
-      <FeaturesBar navItems={navItems} />
+        <FeaturesBar navItems={navItems} />
 
-      {isConnected && activeNavItem === "Initialize Account" && (
-        <InitializeForm />
-      )}
-      {!clientContext.error && isConnected && (
-        <div className="flex items-center flex-col justify-center">
-          {activeNavItem === "Add SubAccount" && <CreateSubAccountsFrom />}
-          {activeNavItem === "Search Account" && <SearchAccount />}
-          {activeNavItem === "Deposite" && <DepositeForm />}
-          {activeNavItem === "Withdraw" && <WithdrawlForm />}
-          {activeNavItem === "My SubAccounts" && <AccountTable />}
-          {activeNavItem === "Market Order" && <MarketOrder />}
-          {activeNavItem === "Limit Order" && <LimitOrder />}
-        </div>
-      )}
+        {isConnected && activeNavItem === "Initialize Account" && (
+          <InitializeForm />
+        )}
+        {!clientContext.error && isConnected && (
+          <div className="flex items-center flex-col justify-center">
+            {activeNavItem === "Add SubAccount" && <CreateSubAccountsFrom />}
+            {activeNavItem === "Search Account" && <SearchAccount />}
+            {activeNavItem === "Deposite" && <DepositeForm />}
+            {activeNavItem === "Withdraw" && <WithdrawlForm />}
+            {activeNavItem === "My SubAccounts" && <AccountTable />}
+            {activeNavItem === "Market Order" && <MarketOrder />}
+            {activeNavItem === "Limit Order" && <LimitOrder />}
+          </div>
+        )}
 
-      {!isConnected && (
-        <ul className="mx-auto text-center font-semibold outline-dotted p-4 rounded-3xl">
-          <li>Connect your wallet to continue.</li>
-          <li>This application runs on Solana devnet.</li>
-          <li>Supports SOL-PERP.</li>
-          <li>
-            Account subscription type: "Websockets" is used to search for sub
-            accounts details.
-          </li>
-        </ul>
-      )}
+        {!isConnected && (
+          <ul className="mx-auto text-center font-semibold outline-dotted p-4 rounded-3xl">
+            <li>Connect your wallet to continue.</li>
+            <li>This application runs on Solana devnet.</li>
+            <li>Supports SOL-PERP.</li>
+            <li>
+              Account subscription type: "Websockets" is used to search for sub
+              accounts details.
+            </li>
+          </ul>
+        )}
 
-      {clientContext.error && (
-        <span className="text-red-400 text-center font-medium">
-          {clientContext.error}
-        </span>
-      )}
-    </div>
+        {clientContext.error && (
+          <span className="text-red-400 text-center font-medium">
+            {clientContext.error}
+          </span>
+        )}
+      </div>
+    </>
   );
 }
