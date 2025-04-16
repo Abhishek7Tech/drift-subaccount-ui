@@ -11,9 +11,7 @@ import { clusterApiUrl } from "@solana/web3.js";
 
 import { useMemo } from "react";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
-import { useWallet } from "@solana/wallet-adapter-react";
 
-const NETWORK_URL = process.env.NEXT_PUBLIC_NETWORK_URL;
 
 const WalletContextProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const network = WalletAdapterNetwork.Devnet;
