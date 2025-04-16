@@ -33,7 +33,7 @@ const ClientProvider = ({ children }: { children: ReactNode }) => {
         if (res.userAccount) {
           setIsSubscribed(res.userAccount);
           setSubIds(res.subAccountIds.ids);
-          console.log("ids", res.subAccountIds.ids);
+         
           // clientStore.setSubIds();
         } else {
           setError("Account not initialized");

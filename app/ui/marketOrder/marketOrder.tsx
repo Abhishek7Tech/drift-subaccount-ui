@@ -79,7 +79,7 @@ const MarketOrder = () => {
   }, [clientContext.subIds]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log("Values", values);
+   
     const accountId = values.accountId;
     const direction = values.direction;
     const baseAssetAmount = values.baseAssetAmount;
@@ -116,7 +116,6 @@ const MarketOrder = () => {
         setMessage(undefined);
       }
     } catch (error) {
-      console.log("Error", error);
       setLoading(false);
       setError("Order Failed");
     }

@@ -40,12 +40,8 @@ const AccountTable = () => {
         } else {
           setError(res.message);
         }
-
-        if (res?.subAccounts) {
-          console.log("RES", res.subAccounts);
-        }
       } catch (error) {
-        console.log("Error", error);
+        
         setError("Something went wrong.");
       }
     };

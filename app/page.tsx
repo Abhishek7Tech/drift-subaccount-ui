@@ -22,17 +22,14 @@ export default function Home() {
   useEffect(() => {
     setIsClient(true);
   }, []);
-  const isWalletConnected = useWalletStore((store) => store.isConnected);
   const activeNavItem = useNavStore((store) => store.activeNavItem);
   if (!clientContext) {
     return;
   }
   return (
-    <div className="flex flex-col space-y-8">
+    <div className="flex flex-col space-y-12">
       {isClient && <Navbar />}
-      <h1 className="text-black">
-        {isWalletConnected ? "Connected" : "Disconnected"}
-      </h1>
+
       <FeaturesBar navItems={navItems} />
       {activeNavItem === "Initialize Account" && <InitializeForm />}
       {!clientContext.error && (

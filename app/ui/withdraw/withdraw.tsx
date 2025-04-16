@@ -69,7 +69,6 @@ const WithdrawlForm = () => {
     setMessage("Withdrawing....");
     setError(undefined);
 
-    console.log("Amount", amount, accountId);
 
     try {
       const req = await fetch("/api/transactions/withdraw", {

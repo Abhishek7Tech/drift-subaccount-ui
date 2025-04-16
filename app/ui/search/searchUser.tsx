@@ -64,7 +64,6 @@ const SearchAccount = () => {
       }
       setLoading(false);
     } catch (error) {
-      console.log("Error", error);
       setErrorMsg("Something went wrong.");
       setLoading(false);
     }

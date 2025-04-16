@@ -5,7 +5,6 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { useEffect, useMemo, useState } from "react";
 import useWalletStore from "@/app/store/walletStore";
 
-
 const Navbar = () => {
   const wallet = useWallet();
 
@@ -22,6 +21,7 @@ const Navbar = () => {
       <Link href="/" className="text-white font-medium text-2xl">
         Drift
       </Link>
+
       <WalletMultiButton />
     </nav>
   );

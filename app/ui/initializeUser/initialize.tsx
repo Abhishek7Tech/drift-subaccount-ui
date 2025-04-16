@@ -97,9 +97,12 @@ const InitializeFrom = () => {
               </FormItem>
             )}
           />
-          <Button disabled={loading} type="submit" className="cursor-pointer">
-            Initialize Account
-          </Button>
+          <div className="flex flex-col space-y-1">
+            <Button disabled={loading} type="submit" className="cursor-pointer w-fit">
+              Initialize Account
+            </Button>
+            <small className="text-black font-semibold">1 account per wallet.</small>
+          </div>
         </form>
       </Form>
       {address && (

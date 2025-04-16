@@ -87,7 +87,7 @@ const LimitOrder = () => {
         }),
       });
       const res = await req.json();
-      console.log("Res", res);
+      
 
       if (req?.status === 200) {
         setTx(res.txId);
@@ -98,12 +98,12 @@ const LimitOrder = () => {
         setMessage(undefined);
       }
     } catch (error) {
-      console.log("Error", error);
+     
       setLoading(false);
       setError("Something went Wrong.");
     }
     setLoading(false);
-    console.log("Values", values);
+ 
   }
   return (
     <>

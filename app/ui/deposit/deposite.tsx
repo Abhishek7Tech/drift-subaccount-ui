@@ -69,7 +69,7 @@ const DepositeForm = () => {
     setLoading(true);
     setMessage("Depositing....");
     setError(undefined);
-    console.log("Amount", amount, accountId);
+  
 
     try {
       const req = await fetch("/api/transactions/deposite", {
