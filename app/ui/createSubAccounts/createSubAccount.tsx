@@ -24,7 +24,7 @@ const formSchema = z.object({
   }),
 });
 
-const InitializeFrom = () => {
+const CreateSubAccountsFrom = () => {
   const [message, setMessage] = useState<undefined | string>(undefined);
   const [address, setAddress] = useState<undefined | string>(undefined);
   const [loading, setLoading] = useState<boolean>(false);
@@ -47,7 +47,7 @@ const InitializeFrom = () => {
     setMessage("Initializing...");
     setError(undefined);
     try {
-      const req = await fetch("/api/initialize", {
+      const req = await fetch("/api/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -98,7 +98,7 @@ const InitializeFrom = () => {
             )}
           />
           <Button disabled={loading} type="submit" className="cursor-pointer">
-            Initialize Account
+            Add SubAccount
           </Button>
         </form>
       </Form>
@@ -111,4 +111,4 @@ const InitializeFrom = () => {
   );
 };
 
-export default InitializeFrom;
+export default CreateSubAccountsFrom;

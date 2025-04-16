@@ -10,6 +10,10 @@ const navItemsArray = [
     active: false,
   },
   {
+    name: "Add SubAccount",
+    active: false,
+  },
+  {
     name: "Deposite",
     active: false,
   },

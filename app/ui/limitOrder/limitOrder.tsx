@@ -90,7 +90,7 @@ const LimitOrder = () => {
       console.log("Res", res);
 
       if (req?.status === 200) {
-        setTx(res.tx);
+        setTx(res.txId);
         setError(undefined);
         setMessage(res.message);
       } else {

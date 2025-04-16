@@ -19,16 +19,16 @@ export async function createClient() {
       console.log("Wallet not found");
       return;
     }
-    console.log("ADDRESS",wallet.publicKey.toString());
+    console.log("ADDRESS", wallet.publicKey.toString());
     const driftClient = new DriftClient({
       connection,
       wallet,
-      env: "devnet"
-    
+      env: "devnet",
     });
 
     return driftClient;
   } catch (error) {
+    console.log("Error", error);
     throw new Error("Failed to create client");
   }
 }

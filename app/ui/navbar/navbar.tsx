@@ -20,7 +20,7 @@ const Navbar = () => {
   return (
     <nav className="w-full bg-black text-white px-6 py-4 flex items-center justify-between shadow-md">
       <Link href="/" className="text-white font-medium text-2xl">
-        Home
+        Drift
       </Link>
       <WalletMultiButton />
     </nav>

@@ -13,6 +13,7 @@ import useClientStore from "../store/navStore";
 interface ClientInterface {
   isSubscribed: boolean;
   error: null | string;
+  setErrorHandler: () => void;
   subIds: undefined | number[];
 }
 
@@ -32,18 +33,22 @@ const ClientProvider = ({ children }: { children: ReactNode }) => {
         if (res.userAccount) {
           setIsSubscribed(res.userAccount);
           setSubIds(res.subAccountIds.ids);
-          console.log("ids",res.subAccountIds.ids)
+          console.log("ids", res.subAccountIds.ids);
           // clientStore.setSubIds();
+        } else {
+          setError("Account not initialized");
         }
       } catch (error) {
         setError("Something went wrong");
       }
     };
     initializeClient();
-  },[]);
+  }, []);
 
-  const value = { isSubscribed, error: null, subIds };
-
+  const setErrorHandler = () => {
+    setError(null);
+  };
+  const value = { isSubscribed, setErrorHandler, error, subIds };
   return (
     <ClientContext.Provider value={value}>{children}</ClientContext.Provider>
   );

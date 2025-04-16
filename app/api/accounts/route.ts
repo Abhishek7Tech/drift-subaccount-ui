@@ -69,7 +69,7 @@ export async function GET() {
     console.log("Error", error);
     return NextResponse.json(
       {
-        message: "Failed to Fetch Accounts.",
+        message:  "Failed to Fetch Accounts.",
       },
       { status: 500 }
     );

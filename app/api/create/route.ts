@@ -13,15 +13,25 @@ export async function POST(req: Request) {
     }
 
     await driftClient.subscribe();
-   
+
+    const accountId = await driftClient.getNextSubAccountId();
+
+    if (accountId > 8) {
+      return NextResponse.json(
+        {
+          message: "Account limit reached",
+        },
+        { status: 500 }
+      );
+    }
     const [txSig, userPublicKey] = await driftClient.initializeUserAccount(
-      0,
+      accountId,
       name
     );
 
     return NextResponse.json(
       {
-        message: "Initialized User.",
+        message: "Initialized SubAccount.",
         signature: txSig,
         address: userPublicKey,
       },
@@ -32,7 +42,7 @@ export async function POST(req: Request) {
   } catch (error) {
     console.log("Error", error);
     return NextResponse.json(
-      { message: "Failed to initialize user." },
+      { message: "Failed to create SubAccount." },
       { status: 500 }
     );
   }
