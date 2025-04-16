@@ -1,4 +1,5 @@
 import { createClient } from "@/app/utils/createClient";
+import createWallet from "@/app/utils/createWallet";
 import {
   BN,
   convertToNumber,
@@ -10,11 +11,11 @@ import {
 } from "@drift-labs/sdk";
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { NextResponse } from "next/server";
-
+const ENVIRONMENT = process.env.NEXT_PUBLIC_ENVIRONMENT;
 export async function GET() {
   try {
-    if (!process.env.NEXT_PUBLIC_KEY_PAIR) {
-      throw new Error("Key pair not found.");
+    if (!ENVIRONMENT) {
+      throw new Error("Environment not found.");
     }
     const driftClient = await createClient();
     if (!driftClient) {
@@ -22,8 +23,11 @@ export async function GET() {
     }
 
     await driftClient.subscribe();
+    const wallet = createWallet(ENVIRONMENT);
 
-    const wallet = new Wallet(loadKeypair(process.env.NEXT_PUBLIC_KEY_PAIR));
+    if (!wallet) {
+      throw new Error("Wallet not found.");
+    }
 
     const getSubAccounts = await driftClient.getUserAccountsForAuthority(
       wallet.publicKey
@@ -69,7 +73,7 @@ export async function GET() {
     console.log("Error", error);
     return NextResponse.json(
       {
-        message:  "Failed to Fetch Accounts.",
+        message: "Failed to Fetch Accounts.",
       },
       { status: 500 }
     );

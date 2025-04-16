@@ -33,7 +33,7 @@ export default function Home() {
       <FeaturesBar navItems={navItems} />
       {activeNavItem === "Initialize Account" && <InitializeForm />}
       {!clientContext.error && (
-        <div className="flex items-center justify-center">
+        <div className="flex items-center flex-col justify-center">
           {activeNavItem === "Add SubAccount" && <CreateSubAccountsFrom />}
           {activeNavItem === "Search Account" && <SearchAccount />}
           {activeNavItem === "Deposite" && <DepositeForm />}

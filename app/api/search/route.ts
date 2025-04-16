@@ -1,3 +1,4 @@
+import createWallet from "@/app/utils/createWallet";
 import {
   BulkAccountLoader,
   convertToNumber,
@@ -14,7 +15,7 @@ import { NextResponse } from "next/server";
 
 const NETWORK =
   process.env.NEXT_PUBLIC_NETWORK_URL || "https://api.devnet.solana.com";
-
+const ENVIRONMENT = process.env.NEXT_PUBLIC_ENVIRONMENT;
 export async function POST(req: Request) {
   const body: { pubKey: string } = await req.json();
   const userAccountToRead = new PublicKey(body.pubKey);
@@ -27,14 +28,13 @@ export async function POST(req: Request) {
     console.log(
       `Solana ${connection.rpcEndpoint} connection established successfully`
     );
-    if (!process.env.NEXT_PUBLIC_KEY_PAIR) {
-      throw new Error("Key pair not found.");
+    if (!ENVIRONMENT) {
+      throw new Error("Environment not found.");
     }
-    const wallet = new Wallet(loadKeypair(process.env.NEXT_PUBLIC_KEY_PAIR));
+    const wallet = createWallet(ENVIRONMENT);
 
     if (!wallet) {
-      console.log("Wallet not found");
-      return;
+      throw new Error("Wallet not found.");
     }
     console.log("ADDRESS", wallet.publicKey.toString());
     const solOracleInfo = SpotMarkets["devnet"].find(
@@ -68,7 +68,7 @@ export async function POST(req: Request) {
         type: "websocket", // Use polling with bulkAccountLoader
       },
     });
-    
+
     await user.subscribe();
 
     if (!user.isSubscribed) {
@@ -96,7 +96,6 @@ export async function POST(req: Request) {
       {
         message: "User Account",
         accountInfo,
-        
       },
       { status: 200 }
     );

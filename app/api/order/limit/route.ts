@@ -1,4 +1,5 @@
 import { createClient } from "@/app/utils/createClient";
+import createWallet from "@/app/utils/createWallet";
 import {
   loadKeypair,
   OrderType,
@@ -7,7 +8,7 @@ import {
 } from "@drift-labs/sdk";
 import { error } from "console";
 import { NextResponse } from "next/server";
-
+const ENVIRONMENT = process.env.NEXT_PUBLIC_ENVIRONMENT;
 export async function POST(req: Request) {
   const body: {
     accountId: number;
@@ -15,17 +16,14 @@ export async function POST(req: Request) {
     baseAssetAmount: number;
     price: number;
   } = await req.json();
-
-  if (!process.env.NEXT_PUBLIC_KEY_PAIR) {
-    throw new Error("Key pair not found.");
+  if (!ENVIRONMENT) {
+    throw new Error("Environment not found.");
   }
-  const wallet = new Wallet(loadKeypair(process.env.NEXT_PUBLIC_KEY_PAIR));
+  const wallet = createWallet(ENVIRONMENT);
 
   if (!wallet) {
-    console.log("Wallet not found");
-    return;
+    throw new Error("Wallet not found.");
   }
-
   try {
     const accountId = body.accountId;
     const driftClient = await createClient();

@@ -1,25 +1,27 @@
-import { Connection } from "@solana/web3.js";
+import { Connection, Keypair } from "@solana/web3.js";
 
 import { DriftClient, loadKeypair, Wallet } from "@drift-labs/sdk";
+import createWallet from "./createWallet";
 const NETWORK =
   process.env.NEXT_PUBLIC_NETWORK_URL || "https://api.devnet.solana.com";
 
+const ENVIRONMENT = process.env.NEXT_PUBLIC_ENVIRONMENT;
 export async function createClient() {
   try {
     const connection = new Connection(NETWORK, "confirmed");
     console.log(
       `Solana ${connection.rpcEndpoint} connection established successfully`
     );
-    if (!process.env.NEXT_PUBLIC_KEY_PAIR) {
-      throw new Error("Key pair not found.");
+
+    if (!ENVIRONMENT) {
+      throw new Error("Environment not found.");
     }
-    const wallet = new Wallet(loadKeypair(process.env.NEXT_PUBLIC_KEY_PAIR));
+    const wallet = createWallet(ENVIRONMENT);
 
     if (!wallet) {
-      console.log("Wallet not found");
-      return;
+      throw new Error("Wallet not found.")
+      
     }
-    console.log("ADDRESS", wallet.publicKey.toString());
     const driftClient = new DriftClient({
       connection,
       wallet,
