@@ -9,6 +9,7 @@ function createWallet(env: string) {
       throw new Error("Key pair not found.");
     }
 
+    console.log("KEY_PAIR_DEV", KEY_PAIR_DEV);
     const wallet = new Wallet(loadKeypair(KEY_PAIR_DEV));
 
     return wallet;

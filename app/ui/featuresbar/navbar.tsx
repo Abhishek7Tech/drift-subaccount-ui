@@ -1,13 +1,10 @@
 "use client";
-import React, { JSX, useState } from "react";
+import React from "react";
 import {
   motion,
   AnimatePresence,
-  useScroll,
-  useMotionValueEvent,
 } from "motion/react";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
 import useNavStore from "@/app/store/navStore";
 
 export const FeaturesBar = ({

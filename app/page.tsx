@@ -15,6 +15,7 @@ import useNavStore from "./store/navStore";
 import { ClientContext } from "./providers/ClientProvider";
 import CreateSubAccountsFrom from "./ui/createSubAccounts/createSubAccount";
 import { useWallet } from "@solana/wallet-adapter-react";
+import usePriceStore from "./store/dataStore";
 
 export default function Home() {
   const [isClient, setIsClient] = useState(false);
@@ -24,6 +25,7 @@ export default function Home() {
   useEffect(() => {
     setIsClient(true);
   }, []);
+  const fetchPrices = usePriceStore((store) => store.fetch);
   const activeNavItem = useNavStore((store) => store.activeNavItem);
   const isConnected = useWalletStore((store) => store.isConnected);
   const isConnectedHandler = useWalletStore((store) => store.setIsConnected);
@@ -34,6 +36,18 @@ export default function Home() {
   useEffect(() => {
     isConnectedHandler(wallet.connected);
   }, [wallet]);
+
+  // useEffect(() => {
+  //   (async () => {
+  //     try {
+  //       await fetchPrices(); // Call the fetch function
+  //       const data = usePriceStore.getState().data; // Access the updated data
+  //       console.log("SOL PRICE", data);
+  //     } catch (error) {
+  //       console.error("Error fetching prices:", error);
+  //     }
+  //   })();
+  // }, [])
 
   return (
     <>
