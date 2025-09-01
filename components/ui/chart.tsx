@@ -1,31 +1,45 @@
 "use client";
 
+import { chartOptions } from "@/app/utils/chartOptions";
+import { CandlestickData, Time, WhitespaceData } from "lightweight-charts";
 import {
   AreaSeries,
-  BarSeries,
-  BaselineSeries,
-  ColorType,
-  createChart,
-} from "lightweight-charts";
-import { Layout } from "lucide-react";
+  CandlestickSeries,
+  Chart,
+  TimeScale,
+  TimeScaleFitContentTrigger,
+} from "lightweight-charts-react-components";
 
-const ChartContainer = () => {
-  const container = document.getElementById("chart-container")!;
-  const chartOptions = {
-    layout: {
-      textColor: "white",
-      background: { type: ColorType.Solid, color: "#101828" },
-    },
-  };
-  const chart = createChart(container, chartOptions);
-  const areaSeries = chart.addSeries(AreaSeries);
-  const barSeries = chart.addSeries(BarSeries);
-  const baselineSeries = chart.addSeries(BaselineSeries);
+interface PriceData {
+  prices: [number, number][];
+}
 
+const ChartContainer = ({data}: {data: CandlestickData[]}) => {
+  console.log("DATA", data);
   
+  if(!data) {
+    return;
+  }
+
+  console.log("DATA", data[0], data[0])
 
   return (
-    <div id="chart-container" style={{ width: "600px", height: "400px" }}></div>
+    <Chart options={chartOptions} containerProps={{ style: { flexGrow: "1" } }}>
+      <CandlestickSeries
+        data={data}
+        options={{
+          upColor: "#28a49c",
+          downColor: "#ff6b6b",
+          borderUpColor: "#28a49c",
+          borderDownColor: "#ff6b6b",
+          wickUpColor: "#28a49c",
+          wickDownColor: "#ff6b6b",
+        }}
+      />
+      <TimeScale>
+          <TimeScaleFitContentTrigger deps={[]} />
+        </TimeScale>
+    </Chart>
   );
 };
 

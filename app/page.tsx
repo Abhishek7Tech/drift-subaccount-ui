@@ -16,6 +16,7 @@ import { ClientContext } from "./providers/ClientProvider";
 import CreateSubAccountsFrom from "./ui/createSubAccounts/createSubAccount";
 import { useWallet } from "@solana/wallet-adapter-react";
 import usePriceStore from "./store/dataStore";
+import ChartContainer from "@/components/ui/chart";
 
 export default function Home() {
   const [isClient, setIsClient] = useState(false);
@@ -37,22 +38,23 @@ export default function Home() {
     isConnectedHandler(wallet.connected);
   }, [wallet]);
 
-  // useEffect(() => {
-  //   (async () => {
-  //     try {
-  //       await fetchPrices(); // Call the fetch function
-  //       const data = usePriceStore.getState().data; // Access the updated data
-  //       console.log("SOL PRICE", data);
-  //     } catch (error) {
-  //       console.error("Error fetching prices:", error);
-  //     }
-  //   })();
-  // }, [])
+  useEffect(() => {
+    (async () => {
+      try {
+        await fetchPrices();
+        console.log("Prices fetched successfully",  usePriceStore.getState().data);
+      } catch (error) {
+        console.error("Error fetching prices:", error);
+      }
+    })();
+  }, []);
 
   return (
     <>
       <div className="flex flex-col space-y-12 md:hidden items-center ">
-        <h1 className="text-3xl text-center">Not available on smaller screens.</h1>
+        <h1 className="text-3xl text-center">
+          Not available on smaller screens.
+        </h1>
       </div>
       <div className="md:flex flex-col space-y-12 hidden ">
         {isClient && <Navbar />}
@@ -85,6 +87,9 @@ export default function Home() {
             </li>
           </ul>
         )}
+
+        
+          <ChartContainer data={usePriceStore.getState().data} />
 
         {clientContext.error && (
           <span className="text-red-400 text-center font-medium">
