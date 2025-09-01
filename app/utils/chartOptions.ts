@@ -2,8 +2,6 @@
 import type { ChartOptions, DeepPartial } from "lightweight-charts";
 
 const chartOptions = {
-  width: 600,
-  height: 300,
   autoSize: true,
   layout: {
     attributionLogo: false,

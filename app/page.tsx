@@ -59,9 +59,9 @@ export default function Home() {
       <div className="md:flex flex-col space-y-12 hidden ">
         {isClient && <Navbar />}
 
-        <FeaturesBar navItems={navItems} />
+        {/* <FeaturesBar navItems={navItems} /> */}
 
-        {isConnected && activeNavItem === "Initialize Account" && (
+        {/* {isConnected && activeNavItem === "Initialize Account" && (
           <InitializeForm />
         )}
         {!clientContext.error && isConnected && (
@@ -86,7 +86,7 @@ export default function Home() {
               accounts details.
             </li>
           </ul>
-        )}
+        )} */}
 
         
           <ChartContainer data={usePriceStore.getState().data} />
