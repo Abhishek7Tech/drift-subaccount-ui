@@ -18,6 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 const formSchema = z.object({
   username: z.string().min(2, {
     message: "Username must be at least 2 characters.",
@@ -71,43 +72,57 @@ const CreateSubAccountsFrom = () => {
     setLoading(false);
   }
   return (
-    <>
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-8 min-w-2xs mx-auto bg-gray-50 rounded-xl border shadow-sm shadow-gray-500 p-4"
-        >
-          <FormField
-            control={form.control}
-            name="username"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Username</FormLabel>
-                <FormControl>
-                  <Input type="text" placeholder="drift" {...field} />
-                </FormControl>
-                {message && (
-                  <span className="text-green-400 font-medium">{message}</span>
-                )}
-                {error && (
-                  <span className="text-red-400 font-medium">{error}</span>
-                )}
+   
+        <>
+          <Form {...form}>
 
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <Button disabled={loading} type="submit" className="cursor-pointer">
-            Add SubAccount
-          </Button>
-        </form>
-      </Form>
-      {address && (
-        <p className="text-slate-800 text-center break-all">
-          Public address: {address}
-        </p>
-      )}
-    </>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-4 min-w-2xs mx-auto bg-gray-50 rounded-xl border shadow-sm shadow-gray-500 p-4"
+              >
+              <CardHeader>
+                <CardTitle>Sub Account</CardTitle>
+                <CardDescription>Create a subaccount.</CardDescription>
+              </CardHeader>
+              <div className="space-y-2">
+              <FormField
+                control={form.control}
+                name="username"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Username</FormLabel>
+                    <FormControl>
+                      <Input type="text" placeholder="drift" {...field} />
+                    </FormControl>
+                    {message && (
+                      <span className="text-green-400 font-medium">
+                        {message}
+                      </span>
+                    )}
+                    {error && (
+                      <span className="text-red-400 font-medium">{error}</span>
+                    )}
+
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button
+                disabled={loading}
+                type="submit"
+                className="cursor-pointer"
+              >
+                Add SubAccount
+              </Button>
+              </div>
+            </form>
+          </Form>
+          {address && (
+            <p className="text-slate-800 text-center break-all">
+              Public address: {address}
+            </p>
+          )}
+        </>   
   );
 };
 

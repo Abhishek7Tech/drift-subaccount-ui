@@ -18,6 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 const formSchema = z.object({
   username: z.string().min(2, {
     message: "Username must be at least 2 characters.",
@@ -75,33 +76,47 @@ const InitializeFrom = () => {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-8 min-w-2xs mx-auto bg-gray-50 rounded-xl border shadow-sm shadow-gray-500 p-4"
+          className="space-y-4 min-w-2xs mx-auto bg-gray-50 rounded-xl border shadow-sm shadow-gray-500 p-4"
         >
-          <FormField
-            control={form.control}
-            name="username"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Username</FormLabel>
-                <FormControl>
-                  <Input type="text" placeholder="drift" {...field} />
-                </FormControl>
-                {message && (
-                  <span className="text-green-400 font-medium">{message}</span>
-                )}
-                {error && (
-                  <span className="text-red-400 font-medium">{error}</span>
-                )}
+          <CardHeader>
+            <CardTitle>Sub Account</CardTitle>
+            <CardDescription>Create a subaccount.</CardDescription>
+          </CardHeader>
+          <div className="space-y-2">
+            <FormField
+              control={form.control}
+              name="username"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Username</FormLabel>
+                  <FormControl>
+                    <Input type="text" placeholder="drift" {...field} />
+                  </FormControl>
+                  {message && (
+                    <span className="text-green-400 font-medium">
+                      {message}
+                    </span>
+                  )}
+                  {error && (
+                    <span className="text-red-400 font-medium">{error}</span>
+                  )}
 
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <div className="flex flex-col space-y-1">
-            <Button disabled={loading} type="submit" className="cursor-pointer w-fit">
-              Initialize Account
-            </Button>
-            <small className="text-black font-semibold">1 account per wallet.</small>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div className="flex flex-col space-y-1">
+              <Button
+                disabled={loading}
+                type="submit"
+                className="cursor-pointer w-fit"
+              >
+                Initialize Account
+              </Button>
+              <small className="text-black font-semibold">
+                1 account per wallet.
+              </small>
+            </div>
           </div>
         </form>
       </Form>

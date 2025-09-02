@@ -16,7 +16,7 @@ const solPriceStore = create<{
             const p = priceData.parsed[0].price;
 
     if (p.price !== undefined && p.expo !== undefined) {
-      const price = +p.price * 10 ** p.expo; // adjust using exponent
+      const price = +p.price * 10 ** p.expo;
       set({ solPrice: price.toFixed(2) });
     }             
         }
@@ -24,12 +24,3 @@ const solPriceStore = create<{
 }));
 
 export default solPriceStore;
-
- 
-// The URL below is a public Hermes instance operated by the Pyth Data Association.
-// Hermes is also available from several third-party providers listed here:
-// https://docs.pyth.network/price-feeds/api-instances-and-providers/hermes
- 
-// Specify the price feed ID and the TWAP window in seconds (maximum 600 seconds)
- 
-// TWAP updates are strings of base64-encoded binary data

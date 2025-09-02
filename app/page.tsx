@@ -17,6 +17,7 @@ import CreateSubAccountsFrom from "./ui/createSubAccounts/createSubAccount";
 import { useWallet } from "@solana/wallet-adapter-react";
 import usePriceStore from "./store/dataStore";
 import ChartContainer from "@/components/ui/chart";
+import { AccountsTab } from "./ui/accountsTab/tabs";
 
 export default function Home() {
   const [isClient, setIsClient] = useState(false);
@@ -30,10 +31,7 @@ export default function Home() {
   const activeNavItem = useNavStore((store) => store.activeNavItem);
   const isConnected = useWalletStore((store) => store.isConnected);
   const isConnectedHandler = useWalletStore((store) => store.setIsConnected);
-  if (!clientContext) {
-    return;
-  }
-
+  const data = usePriceStore.getState().data;
   useEffect(() => {
     isConnectedHandler(wallet.connected);
   }, [wallet]);
@@ -42,28 +40,39 @@ export default function Home() {
     (async () => {
       try {
         await fetchPrices();
-        console.log("Prices fetched successfully",  usePriceStore.getState().data);
+        console.log(
+          "Prices fetched successfully",
+          usePriceStore.getState().data
+        );
       } catch (error) {
         console.error("Error fetching prices:", error);
       }
     })();
   }, []);
+  if (!clientContext) {
+    return;
+  }
+
+  if (!data.length) {
+    console.log("Returning", data);
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
-      <div className="flex flex-col space-y-12 md:hidden items-center ">
-        <h1 className="text-3xl text-center">
+      {/* <div className="flex flex-col space-y-12 md:hidden items-center "> */}
+      {/* <h1 className="text-3xl text-center">
           Not available on smaller screens.
         </h1>
       </div>
       <div className="md:flex flex-col space-y-12 hidden ">
-        {isClient && <Navbar />}
+      
+      <FeaturesBar navItems={navItems} />
 
-        {/* <FeaturesBar navItems={navItems} /> */}
-
-        {/* {isConnected && activeNavItem === "Initialize Account" && (
+         {isConnected && activeNavItem === "Initialize Account" && (
           <InitializeForm />
-        )}
+          )}
+          
         {!clientContext.error && isConnected && (
           <div className="flex items-center flex-col justify-center">
             {activeNavItem === "Add SubAccount" && <CreateSubAccountsFrom />}
@@ -73,10 +82,10 @@ export default function Home() {
             {activeNavItem === "My SubAccounts" && <AccountTable />}
             {activeNavItem === "Market Order" && <MarketOrder />}
             {activeNavItem === "Limit Order" && <LimitOrder />}
-          </div>
-        )}
-
-        {!isConnected && (
+            </div>
+            )}
+            
+            {!isConnected && (
           <ul className="mx-auto text-center font-semibold outline-dotted p-4 rounded-3xl">
             <li>Connect your wallet to continue.</li>
             <li>This application runs on Solana devnet.</li>
@@ -84,19 +93,21 @@ export default function Home() {
             <li>
               Account subscription type: "Websockets" is used to search for sub
               accounts details.
-            </li>
-          </ul>
-        )} */}
-
-        
-          <ChartContainer data={usePriceStore.getState().data} />
-
-        {clientContext.error && (
-          <span className="text-red-400 text-center font-medium">
-            {clientContext.error}
-          </span>
-        )}
-      </div>
+              </li>
+              </ul>
+              )} */}
+      {isClient && <Navbar />}
+        <div className="flex gap-x-1">
+          <ChartContainer data={data} />
+          <AccountsTab />
+        </div>
+        <AccountTable />
+      {clientContext.error && (
+        <span className="text-red-400 text-center font-medium">
+          {clientContext.error}
+        </span>
+      )}
+      {/* </div> */}
     </>
   );
 }
