@@ -69,7 +69,6 @@ const DepositeForm = () => {
     setLoading(true);
     setMessage("Depositing....");
     setError(undefined);
-  
 
     try {
       const req = await fetch("/api/transactions/deposite", {
@@ -99,97 +98,91 @@ const DepositeForm = () => {
 
   return (
     <>
-      <Card className="space-y-8 min-w-2xs mx-auto bg-gray-50 rounded-xl shadow-gray-500 p-4">
-        <CardHeader>
-          <CardTitle>Deposite</CardTitle>
-          <CardDescription>Make a deposite.</CardDescription>
-        </CardHeader>
-        <>
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              // className=" mx-auto bg-gray-50 rounded-xl shadow-gray-500 border shadow-sm p-4"
-            >
-              <div className="grid w-full items-center gap-4">
-                <div className="flex flex-col space-y-1.5">
-                  <FormField
-                    control={form.control}
-                    name="amount"
-                    render={({ field }) => (
-                      <>
-                        <FormItem>
-                          <FormLabel>Amount</FormLabel>
-                          <FormControl>
-                            <Input
-                              type="number"
-                              min={1}
-                              max={10}
-                              step={0.1}
-                              placeholder="0.35"
-                              {...field}
-                            />
-                          </FormControl>
-                        </FormItem>
-                      </>
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-4 min-w-2xs mx-auto bg-gray-50 rounded-xl border shadow-sm shadow-gray-500 p-4"
+        >
+          <CardHeader>
+            <CardTitle>Deposite</CardTitle>
+            <CardDescription>Make a deposite.</CardDescription>
+          </CardHeader>
+          <div className="grid w-full items-center gap-4">
+            <div className="flex flex-col space-y-1.5">
+              <FormField
+                control={form.control}
+                name="amount"
+                render={({ field }) => (
+                  <>
+                    <FormItem>
+                      <FormLabel>Amount</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          min={1}
+                          max={10}
+                          step={0.1}
+                          placeholder="0.35"
+                          {...field}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  </>
+                )}
+              />
+            </div>
+            <div className="flex flex-col space-y-1.5">
+              <FormField
+                control={form.control}
+                name="accountId"
+                render={({ field }) => (
+                  <FormItem itemType="number" className="w-full">
+                    <FormLabel>Select Sub Account</FormLabel>
+                    <FormControl>
+                      <Select
+                        {...field}
+                        onValueChange={field.onChange}
+                        value={field.value?.toString()}
+                      >
+                        <SelectTrigger className="w-full" id="accountId">
+                          <SelectValue placeholder="0" />
+                        </SelectTrigger>
+                        <SelectContent position="popper">
+                          {clientContext &&
+                            clientContext.subIds?.map((ids) => (
+                              <SelectItem key={ids} value={ids.toString()}>
+                                {ids.toString() || "0"}
+                              </SelectItem>
+                            ))}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    {message && (
+                      <span className="text-green-400 font-medium">
+                        {message}
+                      </span>
                     )}
-                  />
-                </div>
-                <div className="flex flex-col space-y-1.5">
-                  <FormField
-                    control={form.control}
-                    name="accountId"
-                    render={({ field }) => (
-                      <FormItem itemType="number" className="w-full">
-                        <FormLabel>Select Sub Account</FormLabel>
-                        <FormControl>
-                          <Select
-                            {...field}
-                            onValueChange={field.onChange}
-                            value={field.value?.toString()}
-                          >
-                            <SelectTrigger className="w-full" id="accountId">
-                              <SelectValue placeholder="0" />
-                            </SelectTrigger>
-                            <SelectContent position="popper">
-                              {clientContext &&
-                                clientContext.subIds?.map((ids) => (
-                                  <SelectItem key={ids} value={ids.toString()}>
-                                    {ids.toString() || "0"}
-                                  </SelectItem>
-                                ))}
-                            </SelectContent>
-                          </Select>
-                        </FormControl>
-                        {message && (
-                          <span className="text-green-400 font-medium">
-                            {message}
-                          </span>
-                        )}
 
-                        {error && (
-                          <span className="text-red-400 font-medium">
-                            {error}
-                          </span>
-                        )}
-                        <FormMessage />
-                      </FormItem>
+                    {error && (
+                      <span className="text-red-400 font-medium">{error}</span>
                     )}
-                  />
-                </div>
-                <CardFooter className="flex px-0  space-y-1.5 justify-between">
-                  <Button
-                    disabled={loading}
-                    type="submit"
-                    className="cursor-pointer"
-                  >
-                    Deposite SOL
-                  </Button>
-                </CardFooter>
-              </div>
-            </form>
-          </Form>
-        </>
-      </Card>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <CardFooter className="flex px-0  space-y-1.5 justify-between">
+              <Button
+                disabled={loading}
+                type="submit"
+                className="cursor-pointer"
+              >
+                Deposite SOL
+              </Button>
+            </CardFooter>
+          </div>
+        </form>
+      </Form>
       {tx && (
         <p className="text-slate-800 text-center break-all">Tx Id: {tx}</p>
       )}

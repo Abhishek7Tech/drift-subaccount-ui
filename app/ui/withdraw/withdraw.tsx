@@ -98,17 +98,16 @@ const WithdrawlForm = () => {
 
   return (
     <>
-      <Card className="space-y-8 min-w-2xs mx-auto bg-gray-50 rounded-xl shadow-gray-500 p-4">
-        <CardHeader>
-          <CardTitle>Withdraw</CardTitle>
-          <CardDescription>Make a withdrawl.</CardDescription>
-        </CardHeader>
         <>
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              // className=" mx-auto bg-gray-50 rounded-xl shadow-gray-500 border shadow-sm p-4"
-            >
+          className="space-y-4 min-w-2xs mx-auto bg-gray-50 rounded-xl border shadow-sm shadow-gray-500 p-4"
+              >
+              <CardHeader>
+                <CardTitle>Withdraw</CardTitle>
+                <CardDescription>Make a withdrawl.</CardDescription>
+              </CardHeader>
               <div className="grid w-full items-center gap-4">
                 <div className="flex flex-col space-y-1.5">
                   <FormField
@@ -187,7 +186,6 @@ const WithdrawlForm = () => {
             </form>
           </Form>
         </>
-      </Card>
       {tx && (
         <p className="text-slate-800 text-center break-all">Tx Id: {tx}</p>
       )}
