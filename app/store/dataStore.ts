@@ -15,6 +15,7 @@ const usePriceStore = create<{
   fetch: async () => {
     const response = await fetch("/api/data");
     const data: [number, number, number, number, number][] | undefined = await response.json();
+    console.log("Raw fetched data:", data);
     if (data) {
       // console.log("Raw Data:", data.map((item, idx) => console.log(item[0])));
       const formattedData = await data.map(([time, open, high, low, close], idx) => ({

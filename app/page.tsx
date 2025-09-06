@@ -97,11 +97,13 @@ export default function Home() {
               </ul>
               )} */}
       {isClient && <Navbar />}
+      <div className="flex flex-col justify-between h-full">
         <div className="flex gap-x-1">
           <ChartContainer data={data} />
           <AccountsTab />
         </div>
         <AccountTable />
+        </div>
       {clientContext.error && (
         <span className="text-red-400 text-center font-medium">
           {clientContext.error}
